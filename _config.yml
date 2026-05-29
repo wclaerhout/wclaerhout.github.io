@@ -1,0 +1,14 @@
+title: evo blog
+description: A Julia learning journal
+url: "https://wclaerhout.github.io"
+baseurl: ""
+permalink: /posts/:title/
+
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
