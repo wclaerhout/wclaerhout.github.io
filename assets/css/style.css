@@ -1,16 +1,16 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #edf4ee;
-  --surface:   #f6fbf7;
-  --ink:       #18201a;
-  --ink-2:     #475c50;
-  --ink-3:     #7a9282;
-  --rule:      #c6d8ca;
-  --accent:    #1a7a58;
-  --accent-bg: #cce8d8;
-  --tag-bg:    #d8e8dc;
-  --code-bg:   #e4ede6;
+  --bg:        #0d1a11;
+  --surface:   #132819;
+  --ink:       #e0f0e6;
+  --ink-2:     #96bea4;
+  --ink-3:     #527a61;
+  --rule:      #1e3a28;
+  --accent:    #2dd882;
+  --accent-bg: #0e2e1a;
+  --tag-bg:    #162e1e;
+  --code-bg:   #091410;
   --mono:      'JetBrains Mono', monospace;
   --serif:     'Lora', Georgia, serif;
   --sans:      'DM Sans', system-ui, sans-serif;
@@ -40,7 +40,7 @@ header { border-bottom: 1px solid var(--rule); padding: 0 2rem; }
 .logo span { color: var(--accent); }
 nav { display: flex; gap: 1.8rem; }
 nav a { font-size: 0.82rem; font-weight: 500; color: var(--ink-2); letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.15s; }
-nav a:hover { color: var(--ink); }
+nav a:hover { color: var(--accent); }
 
 /* ── Footer ── */
 footer { border-top: 1px solid var(--rule); padding: 1.5rem 2rem; text-align: center; font-family: var(--mono); font-size: 0.7rem; color: var(--ink-3); }
@@ -123,13 +123,13 @@ h1.post-title { font-family: var(--serif); font-size: 2rem; font-weight: 400; li
 .prose code { font-family: var(--mono); font-size: 0.82em; background: var(--code-bg); padding: 1px 5px; border-radius: 3px; color: var(--ink); }
 .prose pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1.5rem 0 2rem; }
 .prose pre code { background: none; padding: 0; font-size: 0.82rem; line-height: 1.65; color: var(--ink); }
-.prose blockquote { border-left: 3px solid var(--rule); margin: 1.5rem 0; padding: 0.5rem 0 0.5rem 1.25rem; font-family: var(--serif); font-style: italic; color: var(--ink-2); font-size: 0.95rem; }
+.prose blockquote { border-left: 3px solid var(--accent); margin: 1.5rem 0; padding: 0.5rem 0 0.5rem 1.25rem; font-family: var(--serif); font-style: italic; color: var(--ink-2); font-size: 0.95rem; }
 
 /* Syntax highlighting (hand-written HTML spans in existing posts) */
 .prose .comment { color: var(--ink-3); }
 .prose .kw { color: var(--accent); }
-.prose .fn { color: #7c5cbf; }
-.prose .str { color: #3a7a4a; }
+.prose .fn { color: #a78bfa; }
+.prose .str { color: #7ee8a2; }
 
 /* Syntax highlighting (Rouge — used by Markdown posts) */
 .highlight { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; overflow-x: auto; margin: 1.5rem 0 2rem; }
@@ -137,9 +137,9 @@ h1.post-title { font-family: var(--serif); font-size: 2rem; font-weight: 400; li
 .highlight code { font-size: 0.82rem; line-height: 1.65; }
 .highlight .c, .highlight .c1, .highlight .cm, .highlight .cs { color: var(--ink-3); }
 .highlight .k, .highlight .kd, .highlight .kn, .highlight .kp { color: var(--accent); }
-.highlight .nf, .highlight .nc { color: #7c5cbf; }
-.highlight .s, .highlight .s1, .highlight .s2, .highlight .sd { color: #3a7a4a; }
-.highlight .mi, .highlight .mf { color: #b85c00; }
+.highlight .nf, .highlight .nc { color: #a78bfa; }
+.highlight .s, .highlight .s1, .highlight .s2, .highlight .sd { color: #7ee8a2; }
+.highlight .mi, .highlight .mf { color: #f0883e; }
 
 /* ── Algo steps ── */
 .algo-steps { margin: 2rem 0; display: flex; flex-direction: column; gap: 0; }
@@ -155,8 +155,8 @@ h1.post-title { font-family: var(--serif); font-size: 2rem; font-weight: 400; li
 .fig-caption { font-family: var(--mono); font-size: 0.68rem; color: var(--ink-3); padding: 0.6rem 1rem; border-top: 1px solid var(--rule); letter-spacing: 0.03em; }
 
 /* ── Notebook link ── */
-.notebook-link { display: inline-flex; align-items: center; gap: 0.5rem; margin: 2rem 0; background: var(--accent-bg); color: var(--accent); border: 1px solid #8cc4a8; padding: 0.7rem 1.25rem; border-radius: 5px; font-size: 0.85rem; font-weight: 500; transition: background 0.15s; }
-.notebook-link:hover { background: #b8deca; }
+.notebook-link { display: inline-flex; align-items: center; gap: 0.5rem; margin: 2rem 0; background: var(--accent-bg); color: var(--accent); border: 1px solid #1e5534; padding: 0.7rem 1.25rem; border-radius: 5px; font-size: 0.85rem; font-weight: 500; transition: background 0.15s; }
+.notebook-link:hover { background: #162e1e; }
 
 /* ── About page ── */
 .about-wrap { max-width: 600px; margin: 0 auto; padding: 4rem 2rem 6rem; }
