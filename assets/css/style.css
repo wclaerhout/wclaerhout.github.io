@@ -1,16 +1,16 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #0d1a11;
-  --surface:   #132819;
-  --ink:       #e0f0e6;
-  --ink-2:     #96bea4;
-  --ink-3:     #527a61;
-  --rule:      #1e3a28;
-  --accent:    #2dd882;
-  --accent-bg: #0e2e1a;
-  --tag-bg:    #162e1e;
-  --code-bg:   #091410;
+  --bg:        #f4f8f5;
+  --surface:   #ffffff;
+  --ink:       #0d1f16;
+  --ink-2:     #3a5448;
+  --ink-3:     #6a8878;
+  --rule:      #c4dace;
+  --accent:    #1a8a58;
+  --accent-bg: #e0f4ea;
+  --tag-bg:    #e8f3ee;
+  --code-bg:   #eef6f1;
   --mono:      'JetBrains Mono', monospace;
   --serif:     'Lora', Georgia, serif;
   --sans:      'DM Sans', system-ui, sans-serif;
@@ -48,6 +48,10 @@ footer a { color: var(--accent); }
 
 /* ── Home: Hero ── */
 .hero { max-width: 860px; margin: 0 auto; padding: 4rem 2rem 3rem; border-bottom: 1px solid var(--rule); }
+.hero-inner { display: flex; align-items: flex-start; gap: 3rem; }
+.hero-text { flex: 1; min-width: 0; }
+.bulb-art { font-family: var(--mono); font-size: 0.65rem; line-height: 1.4; color: var(--accent); white-space: pre; flex-shrink: 0; opacity: 0.85; padding-top: 0.25rem; }
+@media (max-width: 640px) { .hero-inner { flex-direction: column; } .bulb-art { display: none; } }
 .hero-label { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
 .hero h1 { font-family: var(--serif); font-size: 2.4rem; font-weight: 400; line-height: 1.25; letter-spacing: -0.02em; max-width: 520px; color: var(--ink); }
 .hero p { margin-top: 1rem; font-size: 0.95rem; color: var(--ink-2); max-width: 480px; }
@@ -128,8 +132,8 @@ h1.post-title { font-family: var(--serif); font-size: 2rem; font-weight: 400; li
 /* Syntax highlighting (hand-written HTML spans in existing posts) */
 .prose .comment { color: var(--ink-3); }
 .prose .kw { color: var(--accent); }
-.prose .fn { color: #a78bfa; }
-.prose .str { color: #7ee8a2; }
+.prose .fn { color: #7c5cbf; }
+.prose .str { color: #1a7a42; }
 
 /* Syntax highlighting (Rouge — used by Markdown posts) */
 .highlight { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; overflow-x: auto; margin: 1.5rem 0 2rem; }
@@ -137,9 +141,9 @@ h1.post-title { font-family: var(--serif); font-size: 2rem; font-weight: 400; li
 .highlight code { font-size: 0.82rem; line-height: 1.65; }
 .highlight .c, .highlight .c1, .highlight .cm, .highlight .cs { color: var(--ink-3); }
 .highlight .k, .highlight .kd, .highlight .kn, .highlight .kp { color: var(--accent); }
-.highlight .nf, .highlight .nc { color: #a78bfa; }
-.highlight .s, .highlight .s1, .highlight .s2, .highlight .sd { color: #7ee8a2; }
-.highlight .mi, .highlight .mf { color: #f0883e; }
+.highlight .nf, .highlight .nc { color: #7c5cbf; }
+.highlight .s, .highlight .s1, .highlight .s2, .highlight .sd { color: #1a7a42; }
+.highlight .mi, .highlight .mf { color: #c05a00; }
 
 /* ── Algo steps ── */
 .algo-steps { margin: 2rem 0; display: flex; flex-direction: column; gap: 0; }
@@ -155,8 +159,8 @@ h1.post-title { font-family: var(--serif); font-size: 2rem; font-weight: 400; li
 .fig-caption { font-family: var(--mono); font-size: 0.68rem; color: var(--ink-3); padding: 0.6rem 1rem; border-top: 1px solid var(--rule); letter-spacing: 0.03em; }
 
 /* ── Notebook link ── */
-.notebook-link { display: inline-flex; align-items: center; gap: 0.5rem; margin: 2rem 0; background: var(--accent-bg); color: var(--accent); border: 1px solid #1e5534; padding: 0.7rem 1.25rem; border-radius: 5px; font-size: 0.85rem; font-weight: 500; transition: background 0.15s; }
-.notebook-link:hover { background: #162e1e; }
+.notebook-link { display: inline-flex; align-items: center; gap: 0.5rem; margin: 2rem 0; background: var(--accent-bg); color: var(--accent); border: 1px solid #9acdb4; padding: 0.7rem 1.25rem; border-radius: 5px; font-size: 0.85rem; font-weight: 500; transition: background 0.15s; }
+.notebook-link:hover { background: #cceedd; }
 
 /* ── About page ── */
 .about-wrap { max-width: 600px; margin: 0 auto; padding: 4rem 2rem 6rem; }
