@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cross Entropy Method — evo blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #faf9f7;
+      --surface:   #ffffff;
+      --ink:       #1a1916;
+      --ink-2:     #5a5852;
+      --ink-3:     #9a978f;
+      --rule:      #e8e5df;
+      --accent:    #2a5caa;
+      --accent-bg: #eef3fb;
+      --tag-bg:    #f0ede8;
+      --mono:      'JetBrains Mono', monospace;
+      --serif:     'Lora', Georgia, serif;
+      --sans:      'DM Sans', system-ui, sans-serif;
+      --code-bg:   #f4f2ed;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Header ── */
+    header { border-bottom: 1px solid var(--rule); padding: 0 2rem; }
+    .header-inner {
+      max-width: 860px; margin: 0 auto;
+      display: flex; align-items: baseline; justify-content: space-between;
+      padding: 1.4rem 0;
+    }
+    .logo { font-family: var(--mono); font-size: 1rem; font-weight: 500; letter-spacing: -0.02em; }
+    .logo span { color: var(--accent); }
+    nav { display: flex; gap: 1.8rem; }
+    nav a { font-size: 0.82rem; font-weight: 500; color: var(--ink-2); letter-spacing: 0.04em; text-transform: uppercase; }
+    nav a:hover { color: var(--ink); }
+
+    /* ── Post layout ── */
+    .post-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 6rem;
+    }
+
+    .back-link {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+      letter-spacing: 0.06em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 2.5rem;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .post-date-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+    }
+    .post-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--ink-3);
+      border: 1px solid var(--rule);
+      padding: 2px 8px;
+      border-radius: 2px;
+    }
+
+    h1.post-title {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 400;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+
+    .post-lede {
+      font-size: 1.05rem;
+      color: var(--ink-2);
+      line-height: 1.65;
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* ── Prose ── */
+    .prose h2 {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--ink);
+      margin: 2.5rem 0 0.75rem;
+    }
+    .prose h3 {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--ink-2);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin: 2rem 0 0.6rem;
+    }
+    .prose p {
+      color: var(--ink-2);
+      margin-bottom: 1.25rem;
+      font-size: 0.97rem;
+      line-height: 1.75;
+    }
+    .prose code {
+      font-family: var(--mono);
+      font-size: 0.82em;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+      color: var(--ink);
+    }
+    .prose pre {
+      background: var(--code-bg);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      margin: 1.5rem 0 2rem;
+    }
+    .prose pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: var(--ink);
+    }
+    .prose .comment { color: var(--ink-3); }
+    .prose .kw { color: var(--accent); }
+    .prose .fn { color: #7c5cbf; }
+    .prose .str { color: #3a7a4a; }
+
+    .prose blockquote {
+      border-left: 3px solid var(--rule);
+      margin: 1.5rem 0;
+      padding: 0.5rem 0 0.5rem 1.25rem;
+      font-family: var(--serif);
+      font-style: italic;
+      color: var(--ink-2);
+      font-size: 0.95rem;
+    }
+
+    /* ── Step diagram ── */
+    .algo-steps {
+      margin: 2rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .algo-step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 0.9rem 0;
+      border-top: 1px solid var(--rule);
+    }
+    .algo-step:last-child { border-bottom: 1px solid var(--rule); }
+    .step-num {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      padding-top: 3px;
+      min-width: 2rem;
+      font-weight: 500;
+    }
+    .step-body { font-size: 0.94rem; color: var(--ink-2); line-height: 1.6; }
+    .step-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── Inline figure ── */
+    .fig-inline {
+      margin: 1.5rem 0 2rem;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .fig-canvas {
+      width: 100%;
+      display: block;
+    }
+    .fig-caption {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--ink-3);
+      padding: 0.6rem 1rem;
+      border-top: 1px solid var(--rule);
+      letter-spacing: 0.03em;
+    }
+
+    .notebook-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 2rem 0;
+      background: var(--accent-bg);
+      color: var(--accent);
+      border: 1px solid #c5d8f5;
+      padding: 0.7rem 1.25rem;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    .notebook-link:hover { background: #dceafa; }
+
+    /* ── Footer ── */
+    footer { border-top: 1px solid var(--rule); padding: 1.5rem 2rem; text-align: center; font-family: var(--mono); font-size: 0.7rem; color: var(--ink-3); }
+    footer a { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">evo<span>.</span>blog</a>
+    <nav>
+      <a href="index.html">Posts</a>
+      <a href="about.html">About</a>
+      <a href="https://github.com" target="_blank">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<article class="post-wrap">
+  <a href="index.html" class="back-link">← all posts</a>
+
+  <div class="post-meta">
+    <span class="post-date-label">2025-06-01</span>
+    <span class="post-tag">#optimization</span>
+    <span class="post-tag">#julia</span>
+    <span class="post-tag">#pluto</span>
+    <span class="post-tag">#cem</span>
+  </div>
+
+  <h1 class="post-title">The Cross Entropy Method, as used in LeWorldModel</h1>
+
+  <p class="post-lede">
+    A from-scratch walkthrough of CEM for planning: sample trajectories, keep the best 10%, refit your distribution, repeat. Built in a Pluto notebook with Turing.jl and CairoMakie — no deep learning, just iterative belief updates.
+  </p>
+
+  <div class="prose">
+    <h2>What is the Cross Entropy Method?</h2>
+    <p>
+      CEM is a gradient-free optimisation technique that treats planning as a distribution-fitting problem. Instead of computing gradients, you maintain a distribution over action sequences, sample trajectories from it, discard all but the elite few, and update the distribution to concentrate around those survivors. Repeat until convergence.
+    </p>
+    <p>
+      It's embarrassingly simple, which is probably why it keeps showing up inside model-based RL systems like <a href="https://worldmodels.github.io" style="color:var(--accent)">Ha &amp; Schmidhuber's WorldModels</a> and its successors. The planner doesn't need to backpropagate through the world model — it just needs to evaluate trajectories, which is cheap.
+    </p>
+
+    <blockquote>
+      The best planning algorithm is often the one that makes the fewest assumptions about the model it's planning inside.
+    </blockquote>
+
+    <h2>The algorithm in three steps</h2>
+
+    <div class="algo-steps">
+      <div class="algo-step">
+        <span class="step-num">01</span>
+        <div class="step-body"><strong>Sample.</strong> Draw N trajectories (sequences of 2D steps) from the current belief distribution — initially <code>𝒩(0, 1)</code> for each x/y component at each of the 5 steps.</div>
+      </div>
+      <div class="algo-step">
+        <span class="step-num">02</span>
+        <div class="step-body"><strong>Evaluate &amp; keep elites.</strong> Score each trajectory with the cost function (Euclidean distance to target). Sort by cost, retain the top 10% — the <em>elitists</em>.</div>
+      </div>
+      <div class="algo-step">
+        <span class="step-num">03</span>
+        <div class="step-body"><strong>Refit.</strong> Compute the mean and variance of the elite trajectories. These become the new distribution parameters. Go back to step 1.</div>
+      </div>
+    </div>
+
+    <h2>The setup: get to (3, 4)</h2>
+    <p>
+      The problem is intentionally toy: start at the origin, reach <code>(3, 4)</code> using exactly 5 steps. Each step is a 2D vector drawn from a Gaussian. The cost is just Euclidean distance between where you end up and the target.
+    </p>
+
+    <pre><code><span class="comment"># Cost function — Euclidean distance to target</span>
+<span class="kw">function</span> <span class="fn">cost_func</span>(x, y, x_tar=3, y_tar=4)
+    cost = <span class="fn">sqrt</span>((x - x_tar)^2 + (y - y_tar)^2)
+    <span class="kw">return</span> cost
+<span class="kw">end</span>
+
+<span class="comment"># Turing model: sample 5 2D steps from current belief</span>
+@model <span class="kw">function</span> <span class="fn">action_sampling</span>(μ_vec, σ_vec)
+    steps = <span class="fn">zeros</span>(5)
+    <span class="kw">for</span> i <span class="kw">in</span> 1:<span class="fn">length</span>(steps)
+        steps[i] ~ <span class="fn">MvNormal</span>(μ_vec[i], σ_vec[i])
+    <span class="kw">end</span>
+    x_final = <span class="fn">sum</span>([x[1] <span class="kw">for</span> x <span class="kw">in</span> steps])
+    y_final = <span class="fn">sum</span>([x[2] <span class="kw">for</span> x <span class="kw">in</span> steps])
+    cost = <span class="fn">cost_func</span>(x_final, y_final)
+    <span class="kw">return</span> (x_final, y_final, cost)
+<span class="kw">end</span></code></pre>
+
+    <p>
+      Initial belief: all means zero, all variances one. 200 trajectories sampled from the prior. The scatter is wide — most land nowhere near <code>(3, 4)</code>.
+    </p>
+
+    <!-- SVG: naive scatter -->
+    <div class="fig-inline">
+      <svg class="fig-canvas" viewBox="0 0 480 340" xmlns="http://www.w3.org/2000/svg">
+        <rect width="480" height="340" fill="#faf9f7"/>
+        <!-- grid -->
+        <g stroke="#e8e5df" stroke-width="0.7">
+          <line x1="40" y1="20" x2="40" y2="300"/><line x1="80" y1="20" x2="80" y2="300"/>
+          <line x1="120" y1="20" x2="120" y2="300"/><line x1="160" y1="20" x2="160" y2="300"/>
+          <line x1="200" y1="20" x2="200" y2="300"/><line x1="240" y1="20" x2="240" y2="300"/>
+          <line x1="280" y1="20" x2="280" y2="300"/><line x1="320" y1="20" x2="320" y2="300"/>
+          <line x1="360" y1="20" x2="360" y2="300"/><line x1="400" y1="20" x2="400" y2="300"/>
+          <line x1="440" y1="20" x2="440" y2="300"/>
+          <line x1="20" y1="40" x2="460" y2="40"/><line x1="20" y1="80" x2="460" y2="80"/>
+          <line x1="20" y1="120" x2="460" y2="120"/><line x1="20" y1="160" x2="460" y2="160"/>
+          <line x1="20" y1="200" x2="460" y2="200"/><line x1="20" y1="240" x2="460" y2="240"/>
+          <line x1="20" y1="280" x2="460" y2="280"/>
+        </g>
+        <!-- axes -->
+        <line x1="240" y1="20" x2="240" y2="300" stroke="#1a1916" stroke-width="1.4"/>
+        <line x1="20" y1="160" x2="460" y2="160" stroke="#1a1916" stroke-width="1.4"/>
+        <!-- scattered naive samples (manually placed roughly N(0,5*1) cumulative) -->
+        <g fill="#f97316" opacity="0.75">
+          <circle cx="193" cy="128" r="4"/><circle cx="271" cy="95" r="4"/>
+          <circle cx="152" cy="178" r="4"/><circle cx="305" cy="220" r="4"/>
+          <circle cx="210" cy="72" r="4"/><circle cx="318" cy="148" r="4"/>
+          <circle cx="175" cy="235" r="4"/><circle cx="350" cy="190" r="4"/>
+          <circle cx="228" cy="255" r="4"/><circle cx="142" cy="105" r="4"/>
+          <circle cx="390" cy="135" r="4"/><circle cx="125" cy="200" r="4"/>
+          <circle cx="330" cy="260" r="4"/><circle cx="260" cy="55" r="4"/>
+          <circle cx="185" cy="290" r="4"/><circle cx="420" cy="175" r="4"/>
+          <circle cx="95"  cy="150" r="4"/><circle cx="345" cy="85"  r="4"/>
+          <circle cx="248" cy="205" r="4"/><circle cx="165" cy="55"  r="4"/>
+          <circle cx="300" cy="300" r="4"/><circle cx="215" cy="135" r="4"/>
+          <circle cx="380" cy="230" r="4"/><circle cx="110" cy="265" r="4"/>
+          <circle cx="290" cy="170" r="4"/><circle cx="235" cy="310" r="4"/>
+          <circle cx="430" cy="95"  r="4"/><circle cx="155" cy="310" r="4"/>
+          <circle cx="370" cy="145" r="4"/><circle cx="267" cy="248" r="4"/>
+        </g>
+        <!-- origin (black dot) -->
+        <circle cx="240" cy="160" r="7" fill="#1a1916"/>
+        <!-- target X at (3,4) → pixel: 240+3*40=360, 160-4*40=0→clamp to ~25 -->
+        <g transform="translate(360,40)" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round">
+          <line x1="-8" y1="-8" x2="8" y2="8"/><line x1="8" y1="-8" x2="-8" y2="8"/>
+        </g>
+        <!-- legend -->
+        <circle cx="36" cy="318" r="5" fill="#f97316"/><text x="46" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">naive samples</text>
+        <circle cx="160" cy="318" r="5" fill="#1a1916"/><text x="170" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">start (0,0)</text>
+        <g transform="translate(272,318)" stroke="#ef4444" stroke-width="2" stroke-linecap="round"><line x1="-5" y1="-5" x2="5" y2="5"/><line x1="5" y1="-5" x2="-5" y2="5"/></g>
+        <text x="282" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">target (3,4)</text>
+      </svg>
+      <div class="fig-caption">Fig 1 — 200 naive trajectories sampled from 𝒩(0,1) prior. Wide scatter, few near the target.</div>
+    </div>
+
+    <h2>Finding elites</h2>
+    <p>
+      From the 200 samples, the 20 with the lowest Euclidean distance to the target are kept. These are the elites — green dots in the plot below. They cluster noticeably closer to <code>(3, 4)</code> than the orange cloud.
+    </p>
+
+    <pre><code><span class="kw">function</span> <span class="fn">return_idxs</span>(costs)
+    elite_scores = <span class="fn">sort</span>(<span class="fn">vec</span>(costs))[1:20]       <span class="comment"># top 10%</span>
+    idxs = <span class="fn">zeros</span>(Int, <span class="fn">length</span>(elite_scores))
+    <span class="kw">for</span> (i, score) <span class="kw">in</span> <span class="fn">enumerate</span>(elite_scores)
+        idxs[i] = <span class="fn">findfirst</span>(x -> x == score, <span class="fn">vec</span>(costs))
+    <span class="kw">end</span>
+    <span class="kw">return</span> idxs
+<span class="kw">end</span></code></pre>
+
+    <!-- SVG: elites highlighted -->
+    <div class="fig-inline">
+      <svg class="fig-canvas" viewBox="0 0 480 340" xmlns="http://www.w3.org/2000/svg">
+        <rect width="480" height="340" fill="#faf9f7"/>
+        <g stroke="#e8e5df" stroke-width="0.7">
+          <line x1="40" y1="20" x2="40" y2="300"/><line x1="80" y1="20" x2="80" y2="300"/>
+          <line x1="120" y1="20" x2="120" y2="300"/><line x1="160" y1="20" x2="160" y2="300"/>
+          <line x1="200" y1="20" x2="200" y2="300"/><line x1="240" y1="20" x2="240" y2="300"/>
+          <line x1="280" y1="20" x2="280" y2="300"/><line x1="320" y1="20" x2="320" y2="300"/>
+          <line x1="360" y1="20" x2="360" y2="300"/><line x1="400" y1="20" x2="400" y2="300"/>
+          <line x1="440" y1="20" x2="440" y2="300"/>
+          <line x1="20" y1="40" x2="460" y2="40"/><line x1="20" y1="80" x2="460" y2="80"/>
+          <line x1="20" y1="120" x2="460" y2="120"/><line x1="20" y1="160" x2="460" y2="160"/>
+          <line x1="20" y1="200" x2="460" y2="200"/><line x1="20" y1="240" x2="460" y2="240"/>
+          <line x1="20" y1="280" x2="460" y2="280"/>
+        </g>
+        <line x1="240" y1="20" x2="240" y2="300" stroke="#1a1916" stroke-width="1.4"/>
+        <line x1="20" y1="160" x2="460" y2="160" stroke="#1a1916" stroke-width="1.4"/>
+        <!-- all samples -->
+        <g fill="#f97316" opacity="0.5">
+          <circle cx="193" cy="128" r="4"/><circle cx="271" cy="95" r="4"/>
+          <circle cx="152" cy="178" r="4"/><circle cx="305" cy="220" r="4"/>
+          <circle cx="210" cy="72" r="4"/><circle cx="318" cy="148" r="4"/>
+          <circle cx="175" cy="235" r="4"/><circle cx="350" cy="190" r="4"/>
+          <circle cx="228" cy="255" r="4"/><circle cx="142" cy="105" r="4"/>
+          <circle cx="390" cy="135" r="4"/><circle cx="125" cy="200" r="4"/>
+          <circle cx="330" cy="260" r="4"/><circle cx="260" cy="55" r="4"/>
+          <circle cx="185" cy="290" r="4"/><circle cx="420" cy="175" r="4"/>
+          <circle cx="95"  cy="150" r="4"/><circle cx="345" cy="85"  r="4"/>
+          <circle cx="248" cy="205" r="4"/><circle cx="165" cy="55"  r="4"/>
+          <circle cx="300" cy="300" r="4"/><circle cx="215" cy="135" r="4"/>
+          <circle cx="380" cy="230" r="4"/><circle cx="110" cy="265" r="4"/>
+          <circle cx="290" cy="170" r="4"/><circle cx="235" cy="310" r="4"/>
+          <circle cx="430" cy="95"  r="4"/><circle cx="155" cy="310" r="4"/>
+          <circle cx="370" cy="145" r="4"/><circle cx="267" cy="248" r="4"/>
+        </g>
+        <!-- elite samples clustered near target (360,40) -->
+        <g fill="#22c55e" stroke="#1a1916" stroke-width="0.8">
+          <circle cx="348" cy="55" r="6"/><circle cx="365" cy="48" r="6"/>
+          <circle cx="355" cy="68" r="6"/><circle cx="372" cy="60" r="6"/>
+          <circle cx="340" cy="72" r="6"/><circle cx="380" cy="52" r="6"/>
+          <circle cx="358" cy="82" r="6"/><circle cx="335" cy="55" r="6"/>
+          <circle cx="370" cy="75" r="6"/><circle cx="345" cy="88" r="6"/>
+          <circle cx="362" cy="42" r="6"/><circle cx="375" cy="85" r="6"/>
+          <circle cx="352" cy="95" r="6"/><circle cx="385" cy="65" r="6"/>
+          <circle cx="338" cy="42" r="6"/><circle cx="368" cy="95" r="6"/>
+          <circle cx="390" cy="78" r="6"/><circle cx="343" cy="100" r="6"/>
+          <circle cx="378" cy="45" r="6"/><circle cx="360" cy="58" r="6"/>
+        </g>
+        <circle cx="240" cy="160" r="7" fill="#1a1916"/>
+        <g transform="translate(360,40)" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round">
+          <line x1="-8" y1="-8" x2="8" y2="8"/><line x1="8" y1="-8" x2="-8" y2="8"/>
+        </g>
+        <!-- legend -->
+        <circle cx="36" cy="318" r="5" fill="#f97316" opacity="0.5"/><text x="46" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">all samples</text>
+        <circle cx="140" cy="318" r="5" fill="#22c55e" stroke="#1a1916" stroke-width="0.8"/><text x="150" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">elites (top 10%)</text>
+        <circle cx="280" cy="318" r="5" fill="#1a1916"/><text x="290" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">start</text>
+        <g transform="translate(335,318)" stroke="#ef4444" stroke-width="2" stroke-linecap="round"><line x1="-5" y1="-5" x2="5" y2="5"/><line x1="5" y1="-5" x2="-5" y2="5"/></g>
+        <text x="345" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">target</text>
+      </svg>
+      <div class="fig-caption">Fig 2 — Green = elite 10%. Their cluster already sits near (3, 4).</div>
+    </div>
+
+    <h2>Updating beliefs</h2>
+    <p>
+      The elite trajectories are used to refit the distribution. For each of the 5 steps and each of the 2 dimensions, we compute the sample mean and variance across elites. These become the new <code>μ</code> and <code>σ²</code>.
+    </p>
+
+    <pre><code><span class="kw">function</span> <span class="fn">update_vars</span>(action_chain, idxs)
+    elite_chains = action_chain[:steps][idxs]
+
+    trajectory_array = <span class="fn">zeros</span>(Float64, 20, 10)
+    <span class="kw">for</span> (i, chain) <span class="kw">in</span> <span class="fn">enumerate</span>(elite_chains)
+        trajectory_array[i, :] = <span class="fn">reduce</span>(vcat, chain)
+    <span class="kw">end</span>
+
+    up_means = <span class="fn">vec</span>(<span class="fn">mean</span>(trajectory_array, dims=1))
+    up_vars  = <span class="fn">vec</span>(<span class="fn">var</span>(trajectory_array,  dims=1))
+
+    updated_means = [up_means[i:i+1] <span class="kw">for</span> i <span class="kw">in</span> 1:2:10]
+    updated_vars  = [up_vars[i:i+1]  <span class="kw">for</span> i <span class="kw">in</span> 1:2:10]
+
+    <span class="kw">return</span> updated_means, updated_vars
+<span class="kw">end</span></code></pre>
+
+    <p>
+      The notebook plots the refitted Gaussian for each of the 5 x and 5 y step distributions (a 2×5 grid of density curves). After one iteration, the means have shifted substantially toward the values that sum to 3 and 4 respectively, and the variance has tightened.
+    </p>
+
+    <!-- SVG: distribution shift illustration -->
+    <div class="fig-inline">
+      <svg class="fig-canvas" viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="480" height="200" fill="#faf9f7"/>
+        <text x="20" y="20" font-family="'JetBrains Mono',monospace" font-size="10" fill="#9a978f">x step distributions — before vs after one CEM iteration</text>
+        <!-- 5 mini distribution plots side by side -->
+        <!-- step 1 -->
+        <g transform="translate(20, 30)">
+          <text x="35" y="12" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a978f" text-anchor="middle">step 1</text>
+          <!-- prior N(0,1) wide -->
+          <path d="M5,130 Q20,30 35,28 Q50,26 65,130" fill="none" stroke="#e8e5df" stroke-width="1.5"/>
+          <!-- posterior tighter, shifted -->
+          <path d="M15,130 Q25,55 35,52 Q47,50 55,130" fill="#eef3fb" stroke="#2a5caa" stroke-width="1.5"/>
+        </g>
+        <!-- step 2 -->
+        <g transform="translate(108, 30)">
+          <text x="35" y="12" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a978f" text-anchor="middle">step 2</text>
+          <path d="M5,130 Q20,30 35,28 Q50,26 65,130" fill="none" stroke="#e8e5df" stroke-width="1.5"/>
+          <path d="M18,130 Q28,60 38,58 Q50,56 58,130" fill="#eef3fb" stroke="#2a5caa" stroke-width="1.5"/>
+        </g>
+        <!-- step 3 -->
+        <g transform="translate(196, 30)">
+          <text x="35" y="12" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a978f" text-anchor="middle">step 3</text>
+          <path d="M5,130 Q20,30 35,28 Q50,26 65,130" fill="none" stroke="#e8e5df" stroke-width="1.5"/>
+          <path d="M16,130 Q26,50 36,48 Q48,46 56,130" fill="#eef3fb" stroke="#2a5caa" stroke-width="1.5"/>
+        </g>
+        <!-- step 4 -->
+        <g transform="translate(284, 30)">
+          <text x="35" y="12" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a978f" text-anchor="middle">step 4</text>
+          <path d="M5,130 Q20,30 35,28 Q50,26 65,130" fill="none" stroke="#e8e5df" stroke-width="1.5"/>
+          <path d="M20,130 Q30,58 40,56 Q52,54 60,130" fill="#eef3fb" stroke="#2a5caa" stroke-width="1.5"/>
+        </g>
+        <!-- step 5 -->
+        <g transform="translate(372, 30)">
+          <text x="35" y="12" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a978f" text-anchor="middle">step 5</text>
+          <path d="M5,130 Q20,30 35,28 Q50,26 65,130" fill="none" stroke="#e8e5df" stroke-width="1.5"/>
+          <path d="M17,130 Q27,52 37,50 Q49,48 57,130" fill="#eef3fb" stroke="#2a5caa" stroke-width="1.5"/>
+        </g>
+        <!-- legend -->
+        <line x1="20" y1="182" x2="40" y2="182" stroke="#e8e5df" stroke-width="1.5"/>
+        <text x="45" y="186" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a978f">prior 𝒩(0,1)</text>
+        <rect x="150" y="176" width="16" height="8" fill="#eef3fb" stroke="#2a5caa" stroke-width="1.2"/>
+        <text x="172" y="186" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a978f">posterior (after 1 iter)</text>
+      </svg>
+      <div class="fig-caption">Fig 3 — Schematic of belief update: each step distribution narrows and shifts after refitting on the elites.</div>
+    </div>
+
+    <h2>One iteration later</h2>
+    <p>
+      After a single CEM iteration the new samples cluster dramatically closer to the target. The histogram of Euclidean distances (not shown here, but in the notebook) shifts its mode from ~5 down to ~1–2. A second or third iteration tightens this further.
+    </p>
+
+    <!-- SVG: after iteration scatter -->
+    <div class="fig-inline">
+      <svg class="fig-canvas" viewBox="0 0 480 340" xmlns="http://www.w3.org/2000/svg">
+        <rect width="480" height="340" fill="#faf9f7"/>
+        <g stroke="#e8e5df" stroke-width="0.7">
+          <line x1="40" y1="20" x2="40" y2="300"/><line x1="80" y1="20" x2="80" y2="300"/>
+          <line x1="120" y1="20" x2="120" y2="300"/><line x1="160" y1="20" x2="160" y2="300"/>
+          <line x1="200" y1="20" x2="200" y2="300"/><line x1="240" y1="20" x2="240" y2="300"/>
+          <line x1="280" y1="20" x2="280" y2="300"/><line x1="320" y1="20" x2="320" y2="300"/>
+          <line x1="360" y1="20" x2="360" y2="300"/><line x1="400" y1="20" x2="400" y2="300"/>
+          <line x1="440" y1="20" x2="440" y2="300"/>
+          <line x1="20" y1="40" x2="460" y2="40"/><line x1="20" y1="80" x2="460" y2="80"/>
+          <line x1="20" y1="120" x2="460" y2="120"/><line x1="20" y1="160" x2="460" y2="160"/>
+          <line x1="20" y1="200" x2="460" y2="200"/><line x1="20" y1="240" x2="460" y2="240"/>
+          <line x1="20" y1="280" x2="460" y2="280"/>
+        </g>
+        <line x1="240" y1="20" x2="240" y2="300" stroke="#1a1916" stroke-width="1.4"/>
+        <line x1="20" y1="160" x2="460" y2="160" stroke="#1a1916" stroke-width="1.4"/>
+        <!-- tighter cluster around (3,4) = (360,40) -->
+        <g fill="#f97316" stroke="#9ca3af" stroke-width="0.5" opacity="0.85">
+          <circle cx="355" cy="48" r="4"/><circle cx="362" cy="38" r="4"/>
+          <circle cx="368" cy="55" r="4"/><circle cx="348" cy="42" r="4"/>
+          <circle cx="374" cy="45" r="4"/><circle cx="356" cy="60" r="4"/>
+          <circle cx="365" cy="35" r="4"/><circle cx="350" cy="55" r="4"/>
+          <circle cx="372" cy="62" r="4"/><circle cx="358" cy="30" r="4"/>
+          <circle cx="380" cy="50" r="4"/><circle cx="345" cy="65" r="4"/>
+          <circle cx="370" cy="70" r="4"/><circle cx="360" cy="25" r="4"/>
+          <circle cx="385" cy="42" r="4"/><circle cx="342" cy="48" r="4"/>
+          <circle cx="376" cy="78" r="4"/><circle cx="363" cy="68" r="4"/>
+          <circle cx="352" cy="35" r="4"/><circle cx="378" cy="35" r="4"/>
+          <circle cx="340" cy="58" r="4"/><circle cx="367" cy="82" r="4"/>
+          <circle cx="388" cy="65" r="4"/><circle cx="346" cy="72" r="4"/>
+          <circle cx="373" cy="28" r="4"/><circle cx="358" cy="75" r="4"/>
+          <circle cx="383" cy="55" r="4"/><circle cx="353" cy="22" r="4"/>
+          <circle cx="343" cy="80" r="4"/><circle cx="369" cy="45" r="4"/>
+        </g>
+        <circle cx="240" cy="160" r="7" fill="#1a1916"/>
+        <g transform="translate(360,40)" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round">
+          <line x1="-10" y1="-10" x2="10" y2="10"/><line x1="10" y1="-10" x2="-10" y2="10"/>
+        </g>
+        <!-- legend -->
+        <circle cx="36" cy="318" r="5" fill="#f97316"/><text x="46" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">samples after 1 CEM iter</text>
+        <circle cx="225" cy="318" r="5" fill="#1a1916"/><text x="235" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">start (0,0)</text>
+        <g transform="translate(332,318)" stroke="#ef4444" stroke-width="2" stroke-linecap="round"><line x1="-5" y1="-5" x2="5" y2="5"/><line x1="5" y1="-5" x2="-5" y2="5"/></g>
+        <text x="342" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">target (3,4)</text>
+      </svg>
+      <div class="fig-caption">Fig 4 — After one CEM iteration the entire sample cloud has converged near the target.</div>
+    </div>
+
+    <h2>Continuation</h2>
+    <p>
+      You repeat the loop — sample, evaluate, keep elites, refit — until you're satisfied with the found policy. In practice two or three iterations on this toy problem brings the mean distance below 0.5. In LeWorldModel the same loop runs inside the latent space of the world model, planning over imagined rollouts rather than ground-truth steps.
+    </p>
+
+    <pre><code><span class="comment"># The full CEM loop</span>
+means, vars = initial_belief()
+
+<span class="kw">for</span> iter <span class="kw">in</span> 1:n_iters
+    chain   = <span class="fn">sample</span>(<span class="fn">action_sampling</span>(means, vars), Prior(), 200)
+    results = <span class="fn">generated_quantities</span>(<span class="fn">action_sampling</span>(means, vars), chain)
+    costs   = [r[3] <span class="kw">for</span> r <span class="kw">in</span> results]
+    idxs    = <span class="fn">return_idxs</span>(costs)
+    means, vars = <span class="fn">update_vars</span>(chain, idxs)
+<span class="kw">end</span></code></pre>
+
+    <p>
+      That's the whole algorithm. What makes CEM attractive for model-based planning is that it requires zero gradient information — the world model only needs to be differentiable with respect to its own training loss, not the planning objective. The planner treats it as a black-box simulator.
+    </p>
+
+    <a href="https://github.com" class="notebook-link" target="_blank">
+      📓 &nbsp;Open notebook on GitHub ↗
+    </a>
+
+    <h2>Next up</h2>
+    <p>
+      A deeper look at how LeWorldModel wraps CEM inside the latent space of a VAE+RNN world model — and why the choice of latent representation matters more than the planner itself.
+    </p>
+  </div>
+</article>
+
+<footer>
+  evo blog · <a href="LICENSE">MIT License</a> · built with Julia &amp; <a href="https://pages.github.com">GitHub Pages</a>
+</footer>
+
+</body>
+</html>
