@@ -1,272 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cross Entropy Method — evo blog</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+---
+layout: post
+title: "The Cross Entropy Method, as used in LeWorldModel"
+date: 2025-06-01
+tags: [optimization, julia, pluto, cem]
+description: "A from-scratch walkthrough of CEM for planning: sample trajectories, keep the best 10%, refit your distribution, repeat. Built in a Pluto notebook with Turing.jl and CairoMakie."
+lede: "A from-scratch walkthrough of CEM for planning: sample trajectories, keep the best 10%, refit your distribution, repeat. Built in a Pluto notebook with Turing.jl and CairoMakie — no deep learning, just iterative belief updates."
+---
 
-    :root {
-      --bg:        #faf9f7;
-      --surface:   #ffffff;
-      --ink:       #1a1916;
-      --ink-2:     #5a5852;
-      --ink-3:     #9a978f;
-      --rule:      #e8e5df;
-      --accent:    #2a5caa;
-      --accent-bg: #eef3fb;
-      --tag-bg:    #f0ede8;
-      --mono:      'JetBrains Mono', monospace;
-      --serif:     'Lora', Georgia, serif;
-      --sans:      'DM Sans', system-ui, sans-serif;
-      --code-bg:   #f4f2ed;
-    }
-
-    body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--ink);
-      line-height: 1.7;
-      font-size: 16px;
-    }
-    a { color: inherit; text-decoration: none; }
-
-    /* ── Header ── */
-    header { border-bottom: 1px solid var(--rule); padding: 0 2rem; }
-    .header-inner {
-      max-width: 860px; margin: 0 auto;
-      display: flex; align-items: baseline; justify-content: space-between;
-      padding: 1.4rem 0;
-    }
-    .logo { font-family: var(--mono); font-size: 1rem; font-weight: 500; letter-spacing: -0.02em; }
-    .logo span { color: var(--accent); }
-    nav { display: flex; gap: 1.8rem; }
-    nav a { font-size: 0.82rem; font-weight: 500; color: var(--ink-2); letter-spacing: 0.04em; text-transform: uppercase; }
-    nav a:hover { color: var(--ink); }
-
-    /* ── Post layout ── */
-    .post-wrap {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 3.5rem 2rem 6rem;
-    }
-
-    .back-link {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--ink-3);
-      letter-spacing: 0.06em;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      margin-bottom: 2.5rem;
-      transition: color 0.15s;
-    }
-    .back-link:hover { color: var(--accent); }
-
-    .post-meta {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .post-date-label {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--ink-3);
-    }
-    .post-tag {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: var(--ink-3);
-      border: 1px solid var(--rule);
-      padding: 2px 8px;
-      border-radius: 2px;
-    }
-
-    h1.post-title {
-      font-family: var(--serif);
-      font-size: 2rem;
-      font-weight: 400;
-      line-height: 1.25;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      margin-bottom: 1.5rem;
-    }
-
-    .post-lede {
-      font-size: 1.05rem;
-      color: var(--ink-2);
-      line-height: 1.65;
-      margin-bottom: 2.5rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid var(--rule);
-    }
-
-    /* ── Prose ── */
-    .prose h2 {
-      font-family: var(--serif);
-      font-size: 1.25rem;
-      font-weight: 400;
-      color: var(--ink);
-      margin: 2.5rem 0 0.75rem;
-    }
-    .prose h3 {
-      font-family: var(--mono);
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--ink-2);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin: 2rem 0 0.6rem;
-    }
-    .prose p {
-      color: var(--ink-2);
-      margin-bottom: 1.25rem;
-      font-size: 0.97rem;
-      line-height: 1.75;
-    }
-    .prose code {
-      font-family: var(--mono);
-      font-size: 0.82em;
-      background: var(--code-bg);
-      padding: 1px 5px;
-      border-radius: 3px;
-      color: var(--ink);
-    }
-    .prose pre {
-      background: var(--code-bg);
-      border: 1px solid var(--rule);
-      border-radius: 6px;
-      padding: 1.25rem 1.5rem;
-      overflow-x: auto;
-      margin: 1.5rem 0 2rem;
-    }
-    .prose pre code {
-      background: none;
-      padding: 0;
-      font-size: 0.82rem;
-      line-height: 1.65;
-      color: var(--ink);
-    }
-    .prose .comment { color: var(--ink-3); }
-    .prose .kw { color: var(--accent); }
-    .prose .fn { color: #7c5cbf; }
-    .prose .str { color: #3a7a4a; }
-
-    .prose blockquote {
-      border-left: 3px solid var(--rule);
-      margin: 1.5rem 0;
-      padding: 0.5rem 0 0.5rem 1.25rem;
-      font-family: var(--serif);
-      font-style: italic;
-      color: var(--ink-2);
-      font-size: 0.95rem;
-    }
-
-    /* ── Step diagram ── */
-    .algo-steps {
-      margin: 2rem 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-    .algo-step {
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-      padding: 0.9rem 0;
-      border-top: 1px solid var(--rule);
-    }
-    .algo-step:last-child { border-bottom: 1px solid var(--rule); }
-    .step-num {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--accent);
-      padding-top: 3px;
-      min-width: 2rem;
-      font-weight: 500;
-    }
-    .step-body { font-size: 0.94rem; color: var(--ink-2); line-height: 1.6; }
-    .step-body strong { color: var(--ink); font-weight: 500; }
-
-    /* ── Inline figure ── */
-    .fig-inline {
-      margin: 1.5rem 0 2rem;
-      background: var(--surface);
-      border: 1px solid var(--rule);
-      border-radius: 6px;
-      overflow: hidden;
-    }
-    .fig-canvas {
-      width: 100%;
-      display: block;
-    }
-    .fig-caption {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      color: var(--ink-3);
-      padding: 0.6rem 1rem;
-      border-top: 1px solid var(--rule);
-      letter-spacing: 0.03em;
-    }
-
-    .notebook-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin: 2rem 0;
-      background: var(--accent-bg);
-      color: var(--accent);
-      border: 1px solid #c5d8f5;
-      padding: 0.7rem 1.25rem;
-      border-radius: 5px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      transition: background 0.15s;
-    }
-    .notebook-link:hover { background: #dceafa; }
-
-    /* ── Footer ── */
-    footer { border-top: 1px solid var(--rule); padding: 1.5rem 2rem; text-align: center; font-family: var(--mono); font-size: 0.7rem; color: var(--ink-3); }
-    footer a { color: var(--accent); }
-  </style>
-</head>
-<body>
-
-<header>
-  <div class="header-inner">
-    <a href="index.html" class="logo">evo<span>.</span>blog</a>
-    <nav>
-      <a href="index.html">Posts</a>
-      <a href="about.html">About</a>
-      <a href="https://github.com" target="_blank">GitHub ↗</a>
-    </nav>
-  </div>
-</header>
-
-<article class="post-wrap">
-  <a href="index.html" class="back-link">← all posts</a>
-
-  <div class="post-meta">
-    <span class="post-date-label">2025-06-01</span>
-    <span class="post-tag">#optimization</span>
-    <span class="post-tag">#julia</span>
-    <span class="post-tag">#pluto</span>
-    <span class="post-tag">#cem</span>
-  </div>
-
-  <h1 class="post-title">The Cross Entropy Method, as used in LeWorldModel</h1>
-
-  <p class="post-lede">
-    A from-scratch walkthrough of CEM for planning: sample trajectories, keep the best 10%, refit your distribution, repeat. Built in a Pluto notebook with Turing.jl and CairoMakie — no deep learning, just iterative belief updates.
-  </p>
-
-  <div class="prose">
     <h2>What is the Cross Entropy Method?</h2>
     <p>
       CEM is a gradient-free optimisation technique that treats planning as a distribution-fitting problem. Instead of computing gradients, you maintain a distribution over action sequences, sample trajectories from it, discard all but the elite few, and update the distribution to concentrate around those survivors. Repeat until convergence.
@@ -343,7 +83,7 @@
         <!-- axes -->
         <line x1="240" y1="20" x2="240" y2="300" stroke="#1a1916" stroke-width="1.4"/>
         <line x1="20" y1="160" x2="460" y2="160" stroke="#1a1916" stroke-width="1.4"/>
-        <!-- scattered naive samples (manually placed roughly N(0,5*1) cumulative) -->
+        <!-- scattered naive samples -->
         <g fill="#f97316" opacity="0.75">
           <circle cx="193" cy="128" r="4"/><circle cx="271" cy="95" r="4"/>
           <circle cx="152" cy="178" r="4"/><circle cx="305" cy="220" r="4"/>
@@ -361,9 +101,9 @@
           <circle cx="430" cy="95"  r="4"/><circle cx="155" cy="310" r="4"/>
           <circle cx="370" cy="145" r="4"/><circle cx="267" cy="248" r="4"/>
         </g>
-        <!-- origin (black dot) -->
+        <!-- origin -->
         <circle cx="240" cy="160" r="7" fill="#1a1916"/>
-        <!-- target X at (3,4) → pixel: 240+3*40=360, 160-4*40=0→clamp to ~25 -->
+        <!-- target X at (3,4) -->
         <g transform="translate(360,40)" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round">
           <line x1="-8" y1="-8" x2="8" y2="8"/><line x1="8" y1="-8" x2="-8" y2="8"/>
         </g>
@@ -408,7 +148,6 @@
         </g>
         <line x1="240" y1="20" x2="240" y2="300" stroke="#1a1916" stroke-width="1.4"/>
         <line x1="20" y1="160" x2="460" y2="160" stroke="#1a1916" stroke-width="1.4"/>
-        <!-- all samples -->
         <g fill="#f97316" opacity="0.5">
           <circle cx="193" cy="128" r="4"/><circle cx="271" cy="95" r="4"/>
           <circle cx="152" cy="178" r="4"/><circle cx="305" cy="220" r="4"/>
@@ -426,7 +165,6 @@
           <circle cx="430" cy="95"  r="4"/><circle cx="155" cy="310" r="4"/>
           <circle cx="370" cy="145" r="4"/><circle cx="267" cy="248" r="4"/>
         </g>
-        <!-- elite samples clustered near target (360,40) -->
         <g fill="#22c55e" stroke="#1a1916" stroke-width="0.8">
           <circle cx="348" cy="55" r="6"/><circle cx="365" cy="48" r="6"/>
           <circle cx="355" cy="68" r="6"/><circle cx="372" cy="60" r="6"/>
@@ -443,7 +181,6 @@
         <g transform="translate(360,40)" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round">
           <line x1="-8" y1="-8" x2="8" y2="8"/><line x1="8" y1="-8" x2="-8" y2="8"/>
         </g>
-        <!-- legend -->
         <circle cx="36" cy="318" r="5" fill="#f97316" opacity="0.5"/><text x="46" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">all samples</text>
         <circle cx="140" cy="318" r="5" fill="#22c55e" stroke="#1a1916" stroke-width="0.8"/><text x="150" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">elites (top 10%)</text>
         <circle cx="280" cy="318" r="5" fill="#1a1916"/><text x="290" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">start</text>
@@ -484,40 +221,31 @@
       <svg class="fig-canvas" viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg">
         <rect width="480" height="200" fill="#faf9f7"/>
         <text x="20" y="20" font-family="'JetBrains Mono',monospace" font-size="10" fill="#9a978f">x step distributions — before vs after one CEM iteration</text>
-        <!-- 5 mini distribution plots side by side -->
-        <!-- step 1 -->
         <g transform="translate(20, 30)">
           <text x="35" y="12" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a978f" text-anchor="middle">step 1</text>
-          <!-- prior N(0,1) wide -->
           <path d="M5,130 Q20,30 35,28 Q50,26 65,130" fill="none" stroke="#e8e5df" stroke-width="1.5"/>
-          <!-- posterior tighter, shifted -->
           <path d="M15,130 Q25,55 35,52 Q47,50 55,130" fill="#eef3fb" stroke="#2a5caa" stroke-width="1.5"/>
         </g>
-        <!-- step 2 -->
         <g transform="translate(108, 30)">
           <text x="35" y="12" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a978f" text-anchor="middle">step 2</text>
           <path d="M5,130 Q20,30 35,28 Q50,26 65,130" fill="none" stroke="#e8e5df" stroke-width="1.5"/>
           <path d="M18,130 Q28,60 38,58 Q50,56 58,130" fill="#eef3fb" stroke="#2a5caa" stroke-width="1.5"/>
         </g>
-        <!-- step 3 -->
         <g transform="translate(196, 30)">
           <text x="35" y="12" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a978f" text-anchor="middle">step 3</text>
           <path d="M5,130 Q20,30 35,28 Q50,26 65,130" fill="none" stroke="#e8e5df" stroke-width="1.5"/>
           <path d="M16,130 Q26,50 36,48 Q48,46 56,130" fill="#eef3fb" stroke="#2a5caa" stroke-width="1.5"/>
         </g>
-        <!-- step 4 -->
         <g transform="translate(284, 30)">
           <text x="35" y="12" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a978f" text-anchor="middle">step 4</text>
           <path d="M5,130 Q20,30 35,28 Q50,26 65,130" fill="none" stroke="#e8e5df" stroke-width="1.5"/>
           <path d="M20,130 Q30,58 40,56 Q52,54 60,130" fill="#eef3fb" stroke="#2a5caa" stroke-width="1.5"/>
         </g>
-        <!-- step 5 -->
         <g transform="translate(372, 30)">
           <text x="35" y="12" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a978f" text-anchor="middle">step 5</text>
           <path d="M5,130 Q20,30 35,28 Q50,26 65,130" fill="none" stroke="#e8e5df" stroke-width="1.5"/>
           <path d="M17,130 Q27,52 37,50 Q49,48 57,130" fill="#eef3fb" stroke="#2a5caa" stroke-width="1.5"/>
         </g>
-        <!-- legend -->
         <line x1="20" y1="182" x2="40" y2="182" stroke="#e8e5df" stroke-width="1.5"/>
         <text x="45" y="186" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9a978f">prior 𝒩(0,1)</text>
         <rect x="150" y="176" width="16" height="8" fill="#eef3fb" stroke="#2a5caa" stroke-width="1.2"/>
@@ -549,7 +277,6 @@
         </g>
         <line x1="240" y1="20" x2="240" y2="300" stroke="#1a1916" stroke-width="1.4"/>
         <line x1="20" y1="160" x2="460" y2="160" stroke="#1a1916" stroke-width="1.4"/>
-        <!-- tighter cluster around (3,4) = (360,40) -->
         <g fill="#f97316" stroke="#9ca3af" stroke-width="0.5" opacity="0.85">
           <circle cx="355" cy="48" r="4"/><circle cx="362" cy="38" r="4"/>
           <circle cx="368" cy="55" r="4"/><circle cx="348" cy="42" r="4"/>
@@ -571,7 +298,6 @@
         <g transform="translate(360,40)" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round">
           <line x1="-10" y1="-10" x2="10" y2="10"/><line x1="10" y1="-10" x2="-10" y2="10"/>
         </g>
-        <!-- legend -->
         <circle cx="36" cy="318" r="5" fill="#f97316"/><text x="46" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">samples after 1 CEM iter</text>
         <circle cx="225" cy="318" r="5" fill="#1a1916"/><text x="235" y="322" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5a5852">start (0,0)</text>
         <g transform="translate(332,318)" stroke="#ef4444" stroke-width="2" stroke-linecap="round"><line x1="-5" y1="-5" x2="5" y2="5"/><line x1="5" y1="-5" x2="-5" y2="5"/></g>
@@ -608,12 +334,3 @@ means, vars = initial_belief()
     <p>
       A deeper look at how LeWorldModel wraps CEM inside the latent space of a VAE+RNN world model — and why the choice of latent representation matters more than the planner itself.
     </p>
-  </div>
-</article>
-
-<footer>
-  evo blog · <a href="LICENSE">MIT License</a> · built with Julia &amp; <a href="https://pages.github.com">GitHub Pages</a>
-</footer>
-
-</body>
-</html>
