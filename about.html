@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — evo blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#faf9f7; --surface:#ffffff; --ink:#1a1916; --ink-2:#5a5852;
+      --ink-3:#9a978f; --rule:#e8e5df; --accent:#2a5caa; --accent-bg:#eef3fb;
+      --mono:'JetBrains Mono',monospace; --serif:'Lora',Georgia,serif; --sans:'DM Sans',system-ui,sans-serif;
+    }
+    body { font-family:var(--sans); background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+    a { color:inherit; text-decoration:none; }
+    header { border-bottom:1px solid var(--rule); padding:0 2rem; }
+    .header-inner { max-width:860px; margin:0 auto; display:flex; align-items:baseline; justify-content:space-between; padding:1.4rem 0; }
+    .logo { font-family:var(--mono); font-size:1rem; font-weight:500; letter-spacing:-0.02em; }
+    .logo span { color:var(--accent); }
+    nav { display:flex; gap:1.8rem; }
+    nav a { font-size:0.82rem; font-weight:500; color:var(--ink-2); letter-spacing:0.04em; text-transform:uppercase; }
+    nav a:hover { color:var(--ink); }
+
+    .about-wrap { max-width:600px; margin:0 auto; padding:4rem 2rem 6rem; }
+    .back-link { font-family:var(--mono); font-size:0.72rem; color:var(--ink-3); letter-spacing:0.06em; display:inline-flex; align-items:center; gap:0.4rem; margin-bottom:2.5rem; }
+    .back-link:hover { color:var(--accent); }
+
+    h1 { font-family:var(--serif); font-size:1.8rem; font-weight:400; margin-bottom:2rem; }
+    p { color:var(--ink-2); font-size:0.97rem; line-height:1.75; margin-bottom:1.25rem; }
+    code { font-family:var(--mono); font-size:0.82em; background:#f4f2ed; padding:1px 5px; border-radius:3px; color:var(--ink); }
+
+    .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:2.5rem 0; }
+    .about-card { background:var(--surface); border:1px solid var(--rule); border-radius:6px; padding:1.25rem; }
+    .card-label { font-family:var(--mono); font-size:0.68rem; color:var(--ink-3); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.5rem; }
+    .card-value { font-size:0.9rem; color:var(--ink-2); }
+
+    footer { border-top:1px solid var(--rule); padding:1.5rem 2rem; text-align:center; font-family:var(--mono); font-size:0.7rem; color:var(--ink-3); }
+    footer a { color:var(--accent); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">evo<span>.</span>blog</a>
+    <nav>
+      <a href="index.html">Posts</a>
+      <a href="about.html">About</a>
+      <a href="https://github.com" target="_blank">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<div class="about-wrap">
+  <a href="index.html" class="back-link">← all posts</a>
+
+  <h1>About this blog</h1>
+
+  <p>
+    <strong style="color:var(--ink)">evo blog</strong> is a learning journal. I'm teaching myself to be a better Julia programmer by building things: implementing algorithms from scratch, reading papers and coding up the ideas, and generally spending time at the intersection of math and working code.
+  </p>
+  <p>
+    Every post is backed by a <a href="https://plutojl.org" style="color:var(--accent)">Pluto.jl</a> notebook. Pluto's reactivity means I can share interactive explorations — change a parameter, watch the plot update. The notebooks live on GitHub; links are in each post.
+  </p>
+  <p>
+    Topics I keep coming back to: numerical methods, optimisation, signal processing, and occasionally paper implementations when something in the ML literature catches my eye.
+  </p>
+
+  <div class="about-grid">
+    <div class="about-card">
+      <div class="card-label">Language</div>
+      <div class="card-value">Julia 1.10+</div>
+    </div>
+    <div class="about-card">
+      <div class="card-label">Notebooks</div>
+      <div class="card-value">Pluto.jl</div>
+    </div>
+    <div class="about-card">
+      <div class="card-label">Hosted on</div>
+      <div class="card-value">GitHub Pages</div>
+    </div>
+    <div class="about-card">
+      <div class="card-label">Started</div>
+      <div class="card-value">2025</div>
+    </div>
+  </div>
+
+  <p>
+    If anything here is wrong or could be done better, open an issue on GitHub. I'm learning in public, mistakes included.
+  </p>
+</div>
+
+<footer>
+  evo blog · <a href="LICENSE">MIT License</a> · built with Julia &amp; <a href="https://pages.github.com">GitHub Pages</a>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gradient Descent from scratch — evo blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #faf9f7;
+      --surface:   #ffffff;
+      --ink:       #1a1916;
+      --ink-2:     #5a5852;
+      --ink-3:     #9a978f;
+      --rule:      #e8e5df;
+      --accent:    #2a5caa;
+      --accent-bg: #eef3fb;
+      --tag-bg:    #f0ede8;
+      --mono:      'JetBrains Mono', monospace;
+      --serif:     'Lora', Georgia, serif;
+      --sans:      'DM Sans', system-ui, sans-serif;
+      --code-bg:   #f4f2ed;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Header ── */
+    header { border-bottom: 1px solid var(--rule); padding: 0 2rem; }
+    .header-inner {
+      max-width: 860px; margin: 0 auto;
+      display: flex; align-items: baseline; justify-content: space-between;
+      padding: 1.4rem 0;
+    }
+    .logo { font-family: var(--mono); font-size: 1rem; font-weight: 500; letter-spacing: -0.02em; }
+    .logo span { color: var(--accent); }
+    nav { display: flex; gap: 1.8rem; }
+    nav a { font-size: 0.82rem; font-weight: 500; color: var(--ink-2); letter-spacing: 0.04em; text-transform: uppercase; }
+    nav a:hover { color: var(--ink); }
+
+    /* ── Post layout ── */
+    .post-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 6rem;
+    }
+
+    .back-link {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+      letter-spacing: 0.06em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 2.5rem;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .post-date-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+    }
+    .post-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--ink-3);
+      border: 1px solid var(--rule);
+      padding: 2px 8px;
+      border-radius: 2px;
+    }
+
+    h1.post-title {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 400;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+
+    .post-lede {
+      font-size: 1.05rem;
+      color: var(--ink-2);
+      line-height: 1.65;
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* ── Prose ── */
+    .prose h2 {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--ink);
+      margin: 2.5rem 0 0.75rem;
+    }
+    .prose p {
+      color: var(--ink-2);
+      margin-bottom: 1.25rem;
+      font-size: 0.97rem;
+      line-height: 1.75;
+    }
+    .prose code {
+      font-family: var(--mono);
+      font-size: 0.82em;
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+      color: var(--ink);
+    }
+    .prose pre {
+      background: var(--code-bg);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      margin: 1.5rem 0 2rem;
+    }
+    .prose pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: var(--ink);
+    }
+    .prose .comment { color: var(--ink-3); }
+    .prose .kw { color: var(--accent); }
+
+    .prose blockquote {
+      border-left: 3px solid var(--rule);
+      margin: 1.5rem 0;
+      padding: 0.5rem 0 0.5rem 1.25rem;
+      font-family: var(--serif);
+      font-style: italic;
+      color: var(--ink-2);
+      font-size: 0.95rem;
+    }
+
+    .notebook-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 2rem 0;
+      background: var(--accent-bg);
+      color: var(--accent);
+      border: 1px solid #c5d8f5;
+      padding: 0.7rem 1.25rem;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    .notebook-link:hover { background: #dceafa; }
+
+    /* ── Footer ── */
+    footer { border-top: 1px solid var(--rule); padding: 1.5rem 2rem; text-align: center; font-family: var(--mono); font-size: 0.7rem; color: var(--ink-3); }
+    footer a { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">evo<span>.</span>blog</a>
+    <nav>
+      <a href="index.html">Posts</a>
+      <a href="about.html">About</a>
+      <a href="https://github.com" target="_blank">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<article class="post-wrap">
+  <a href="index.html" class="back-link">← all posts</a>
+
+  <div class="post-meta">
+    <span class="post-date-label">2025-06-01</span>
+    <span class="post-tag">#optimization</span>
+    <span class="post-tag">#julia</span>
+    <span class="post-tag">#pluto</span>
+  </div>
+
+  <h1 class="post-title">Implementing Gradient Descent from scratch in Julia</h1>
+
+  <p class="post-lede">
+    A walkthrough of vanilla GD, mini-batch variants and the subtleties of step-size scheduling — all in a single Pluto notebook. No Flux, no Zygote: just arrays and loops.
+  </p>
+
+  <div class="prose">
+    <h2>Why re-implement something so basic?</h2>
+    <p>
+      Every tutorial I found either abstracted the update rule into a library call or was written in Python. Neither helped me build real intuition. So I opened a Pluto notebook and wrote it from scratch — slow, explicit, educational.
+    </p>
+
+    <blockquote>
+      The best way to understand an algorithm is to be forced to debug your own implementation of it at 1 am.
+    </blockquote>
+
+    <h2>The update rule</h2>
+    <p>
+      Gradient descent is deceptively simple. Given a differentiable loss <code>L(θ)</code>, we repeatedly move <code>θ</code> a small step in the direction of steepest descent:
+    </p>
+
+    <pre><code><span class="comment"># Vanilla gradient descent in Julia</span>
+<span class="kw">function</span> gradient_descent(loss, grad, θ₀; η=0.01, iters=500)
+    θ = copy(θ₀)
+    history = Float64[]
+
+    <span class="kw">for</span> t <span class="kw">in</span> 1:iters
+        ∇L = grad(θ)       <span class="comment"># compute gradient</span>
+        θ  = θ .- η .* ∇L  <span class="comment"># update step</span>
+        push!(history, loss(θ))
+    <span class="kw">end</span>
+
+    <span class="kw">return</span> θ, history
+<span class="kw">end</span></code></pre>
+
+    <p>
+      A few things I like about Julia here: the <code>.</code> broadcasting syntax makes the update feel like the math, and there's no overhead from Python's object model hiding what's actually happening.
+    </p>
+
+    <h2>Step-size scheduling</h2>
+    <p>
+      Fixed learning rates are rarely optimal. I implemented three schedulers — constant, step decay, and cosine annealing — and compared convergence on a simple quadratic. Cosine annealing consistently won on the smoother problems; step decay was more robust on noisy ones.
+    </p>
+
+    <pre><code><span class="comment"># Cosine annealing schedule</span>
+η_cosine(t, T, η_min, η_max) =
+    η_min + 0.5 * (η_max - η_min) * (1 + cos(π * t / T))</code></pre>
+
+    <h2>What's in the notebook</h2>
+    <p>
+      The Pluto notebook includes: interactive sliders for learning rate and batch size, live convergence plots via Plots.jl, a comparison between GD / SGD / mini-batch on a logistic regression problem, and a short section on the intuition behind momentum (but no implementation — that's the next post).
+    </p>
+
+    <a href="https://github.com" class="notebook-link" target="_blank">
+      📓 &nbsp;Open notebook on GitHub ↗
+    </a>
+
+    <h2>Next up</h2>
+    <p>
+      Momentum, Adam, and why adaptive methods sometimes generalise worse despite converging faster. Probably a paper-review hybrid post.
+    </p>
+  </div>
+</article>
+
+<footer>
+  evo blog · <a href="LICENSE">MIT License</a> · built with Julia &amp; <a href="https://pages.github.com">GitHub Pages</a>
+</footer>
+
+</body>
+</html>
