@@ -1,16 +1,16 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #f5f8f5;
-  --surface:   #ffffff;
-  --ink:       #1a201d;
-  --ink-2:     #4e5852;
-  --ink-3:     #8a9590;
-  --rule:      #dbe3dc;
-  --accent:    #1e6e50;
-  --accent-bg: #e6f1eb;
-  --tag-bg:    #e8ece9;
-  --code-bg:   #eff3ef;
+  --bg:        #edf4ee;
+  --surface:   #f6fbf7;
+  --ink:       #18201a;
+  --ink-2:     #475c50;
+  --ink-3:     #7a9282;
+  --rule:      #c6d8ca;
+  --accent:    #1a7a58;
+  --accent-bg: #cce8d8;
+  --tag-bg:    #d8e8dc;
+  --code-bg:   #e4ede6;
   --mono:      'JetBrains Mono', monospace;
   --serif:     'Lora', Georgia, serif;
   --sans:      'DM Sans', system-ui, sans-serif;
@@ -155,8 +155,8 @@ h1.post-title { font-family: var(--serif); font-size: 2rem; font-weight: 400; li
 .fig-caption { font-family: var(--mono); font-size: 0.68rem; color: var(--ink-3); padding: 0.6rem 1rem; border-top: 1px solid var(--rule); letter-spacing: 0.03em; }
 
 /* ── Notebook link ── */
-.notebook-link { display: inline-flex; align-items: center; gap: 0.5rem; margin: 2rem 0; background: var(--accent-bg); color: var(--accent); border: 1px solid #b8d8c8; padding: 0.7rem 1.25rem; border-radius: 5px; font-size: 0.85rem; font-weight: 500; transition: background 0.15s; }
-.notebook-link:hover { background: #d0e8da; }
+.notebook-link { display: inline-flex; align-items: center; gap: 0.5rem; margin: 2rem 0; background: var(--accent-bg); color: var(--accent); border: 1px solid #8cc4a8; padding: 0.7rem 1.25rem; border-radius: 5px; font-size: 0.85rem; font-weight: 500; transition: background 0.15s; }
+.notebook-link:hover { background: #b8deca; }
 
 /* ── About page ── */
 .about-wrap { max-width: 600px; margin: 0 auto; padding: 4rem 2rem 6rem; }
