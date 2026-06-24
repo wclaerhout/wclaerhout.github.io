@@ -103,3 +103,56 @@ Wait ~1 minute for GitHub Pages to rebuild, then hard-refresh (Ctrl+Shift+R).
 - One existing entry (Cross Entropy Method) points at a hand-written article
   (`/posts/cross-entropy-method/`) instead of a raw Pluto file. For your normal
   Pluto notebooks, just use the `/notebooks/...html` form shown above.
+
+---
+
+## Editing site text (home + about)
+
+All wording on the **home page** (hero label, title, intro, tags) and the
+**about page** (title, paragraphs, info cards, closing line) lives in one file:
+`_data/content.yml`. Edit that file — no HTML needed. Markdown (`**bold**`,
+`[links](url)`, `` `code` ``) works inside the about paragraphs.
+
+---
+
+## Local preview (see changes before pushing)
+
+Preview the whole site on your machine at `http://localhost:4000` before you
+push, so GitHub only rebuilds when you actually mean to deploy.
+
+### One-time setup
+
+Ruby + the `github-pages` gem (matches the live build). In an **Administrator
+PowerShell**:
+
+```powershell
+winget install RubyInstallerTeam.RubyWithDevKit.3.3
+# reopen the terminal, then finish the MSYS2 devkit (press Enter for default):
+ridk install 3
+```
+
+Then, in the repo:
+
+```powershell
+gem install bundler
+bundle install
+```
+
+> Installed to `C:\Ruby33-x64`. If `ruby -v` isn't found, reopen the terminal or
+> add `C:\Ruby33-x64\bin` to your PATH.
+
+### Every time you want to preview
+
+```powershell
+bundle exec jekyll serve --livereload
+```
+
+Open **http://localhost:4000**. Edits to `_data/*.yml`, `assets/css/`, layouts,
+and pages rebuild automatically and the browser reloads. Stop with `Ctrl+C`.
+
+### Recommended workflow
+
+1. Work on a `dev` branch, not `main`.
+2. Preview locally with `jekyll serve` until it looks right.
+3. Merge `dev` → `main` (or push `dev` + open a PR). **That** push triggers the
+   GitHub Pages deploy — `main` is always the live site.

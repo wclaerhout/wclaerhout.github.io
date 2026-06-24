@@ -35,6 +35,22 @@ a { color: inherit; text-decoration: none; }
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
+  /* Hide the tree behind the centered content column (~924px wide);
+     show it only in the left/right gutters. */
+  -webkit-mask-image: linear-gradient(to right,
+    #000 0,
+    #000 calc(50% - 520px),
+    transparent calc(50% - 470px),
+    transparent calc(50% + 470px),
+    #000 calc(50% + 520px),
+    #000 100%);
+          mask-image: linear-gradient(to right,
+    #000 0,
+    #000 calc(50% - 520px),
+    transparent calc(50% - 470px),
+    transparent calc(50% + 470px),
+    #000 calc(50% + 520px),
+    #000 100%);
 }
 .bg-tree {
   position: absolute;
