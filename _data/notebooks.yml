@@ -1,0 +1,17 @@
+# =============================================================
+#  NOTEBOOK LIST  —  edit this file to add / change notebooks
+#  Newest at the TOP. The top entry shows as "Latest" on the home page.
+#  See ADDING-POSTS.md for the full how-to.
+# =============================================================
+
+- title: "Bayesian Chess"
+  date: 2026-06-01
+  description: "Bayesian inference applied to chess — modelling position evaluation as a probabilistic belief update. Built in Pluto.jl."
+  url: /notebooks/bayesian-chess.html
+  tags: [bayesian, chess, pluto]
+
+- title: "The Cross Entropy Method"
+  date: 2026-04-01
+  description: "A from-scratch walkthrough of CEM for planning: sample trajectories, keep the best 10%, refit your distribution, repeat. Built in Pluto.jl with Turing.jl and CairoMakie."
+  url: /posts/cross-entropy-method/
+  tags: [optimization, pluto, cem]
