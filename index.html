@@ -41,7 +41,7 @@ title: evo blog
             <span class="post-date">{{ nb.date | date: "%Y-%m-%d" }}</span>
           </div>
           <div class="post-title">{{ nb.title }}</div>
-          <div class="post-desc">{{ nb.description }}</div>
+          <div class="post-desc">{% if nb.description_file %}{% capture nb_desc %}{% include descriptions/{{ nb.description_file }} %}{% endcapture %}{{ nb_desc | markdownify }}{% else %}{{ nb.description }}{% endif %}</div>
           <div class="post-tags">
             {% for tag in nb.tags %}<span class="post-tag">#{{ tag }}</span>{% endfor %}
           </div>

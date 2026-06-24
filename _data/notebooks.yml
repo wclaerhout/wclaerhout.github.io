@@ -1,12 +1,14 @@
 # =============================================================
 #  NOTEBOOK LIST  —  edit this file to add / change notebooks
 #  Newest at the TOP. The top entry shows as "Latest" on the home page.
+#  Short blurb: use `description:`. Longer text: put it in a file under
+#  _includes/descriptions/ and point to it with `description_file:`.
 #  See ADDING-POSTS.md for the full how-to.
 # =============================================================
 
 - title: "Bayesian Chess"
   date: 2026-06-01
-  description: "Bayesian inference applied to chess — modelling position evaluation as a probabilistic belief update. Built in Pluto.jl."
+  description_file: bayesian-chess.md
   url: /notebooks/bayesian-chess.html
   tags: [bayesian, chess, pluto]
 
