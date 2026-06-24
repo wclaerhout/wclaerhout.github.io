@@ -1,7 +1,2 @@
-Bayesian inference applied to chess — modelling position evaluation as a
-probabilistic belief update.
+Bayesian inference applied to the World Chess Championship 2023 between Ding Liren and Ian Nepomniatchi. Based on Prior beliefs, Nepo(mniatchi) was the favourite. However, this tournament proved that prior beliefs do not always tell the truth... After every game we can update our beliefs and see how the chances of the players change of winning the tournament based on Bayesian reasoning.
 
-Each move shifts a prior over who is winning into a posterior, and the
-notebook walks through how the likelihood is built from engine evaluations,
-how uncertainty shrinks as the game progresses, and where the model breaks
-down in sharp tactical positions. Built in Pluto.jl.
