@@ -12,39 +12,50 @@
 <body>
 
 <div class="bg-art" aria-hidden="true">
-  <svg class="bg-tree" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid meet" fill="none">
-    <path d="M20 300 H90
-             M90 180 V420
-             M90 180 H170  M90 420 H170
-             M170 110 V250  M170 330 V500
-             M170 110 H250  M170 250 H250  M170 330 H250  M170 500 H250
-             M250 75 V150   M250 210 V290  M250 300 V360  M250 440 V540
-             M250 75 H330   M250 150 H330  M250 210 H330  M250 290 H330
-             M250 300 H330  M250 360 H330  M250 440 H330  M250 540 H330"
+  <svg class="bg-tree bg-tree-left" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet" fill="none">
+    <use href="#phylo-tree" />
+  </svg>
+  <svg class="bg-tree bg-tree-right" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet" fill="none">
+    <use href="#phylo-tree" />
+  </svg>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <g id="phylo-tree" fill="none">
+    <path d="M30 400 H90
+             M90 200 V600  M90 200 H180  M90 600 H180
+             M180 100 V300  M180 100 H300  M180 300 H300
+             M180 500 V700  M180 500 H300  M180 700 H300
+             M300 50 V150   M300 50 H440   M300 150 H440
+             M300 250 V350  M300 250 H440  M300 350 H440
+             M300 450 V550  M300 450 H440  M300 550 H440
+             M300 650 V750  M300 650 H440  M300 750 H440
+             M440 25 V75    M440 25 H560   M440 75 H560
+             M440 125 V175  M440 125 H560  M440 175 H560
+             M440 225 V275  M440 225 H560  M440 275 H560
+             M440 325 V375  M440 325 H560  M440 375 H560
+             M440 425 V475  M440 425 H560  M440 475 H560
+             M440 525 V575  M440 525 H560  M440 575 H560
+             M440 625 V675  M440 625 H560  M440 675 H560
+             M440 725 V775  M440 725 H560  M440 775 H560"
           stroke="currentColor" stroke-width="1.5"
           stroke-linecap="round" stroke-linejoin="round" />
-    <circle cx="330" cy="75"  r="3" fill="currentColor" stroke="none"/>
-    <circle cx="330" cy="150" r="3" fill="currentColor" stroke="none"/>
-    <circle cx="330" cy="210" r="3" fill="currentColor" stroke="none"/>
-    <circle cx="330" cy="290" r="3" fill="currentColor" stroke="none"/>
-    <circle cx="330" cy="300" r="3" fill="currentColor" stroke="none"/>
-    <circle cx="330" cy="360" r="3" fill="currentColor" stroke="none"/>
-    <circle cx="330" cy="440" r="3" fill="currentColor" stroke="none"/>
-    <circle cx="330" cy="540" r="3" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="25"  r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="75"  r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="125" r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="175" r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="225" r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="275" r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="325" r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="375" r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="425" r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="475" r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="525" r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="575" r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="625" r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="675" r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="725" r="3.5" fill="currentColor" stroke="none"/>
+    <circle cx="560" cy="775" r="3.5" fill="currentColor" stroke="none"/>
+    </g>
   </svg>
-  <pre class="bg-code">function evolve(pop)
-    fitness = score.(pop)
-    parents = select(pop, fitness)
-    children = crossover(parents)
-    mutate!(children, rate=0.01)
-    return children
-end
-
-# tree = neighbor_joining(D)
-# root!(tree, outgroup)
-# while !converged
-#     pop = evolve(pop)
-# end</pre>
 </div>
 
 <header>
