@@ -1,8 +1,8 @@
-# How to add a new notebook
+# How to add a new post
 
 Everything on the site is driven by **one file**: `_data/notebooks.yml`.
 Add an entry there + drop your Pluto HTML in `notebooks/`, and it shows up on
-both the **home page** ("Latest entries") and the **Notebooks** tab automatically.
+both the **Home** page ("Latest entries") and the **Posts** tab automatically.
 
 ---
 
