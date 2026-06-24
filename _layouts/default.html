@@ -12,7 +12,14 @@
 <body>
 
 <div class="bg-art" aria-hidden="true">
-  <svg class="bg-tree" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet" fill="none">
+  <svg class="bg-tree bg-tree-left" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet" fill="none">
+    <use href="#phylo-tree" />
+  </svg>
+  <svg class="bg-tree bg-tree-right" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet" fill="none">
+    <use href="#phylo-tree" />
+  </svg>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <g id="phylo-tree" fill="none">
     <path d="M30 400 H90
              M90 200 V600  M90 200 H180  M90 600 H180
              M180 100 V300  M180 100 H300  M180 300 H300
@@ -47,6 +54,7 @@
     <circle cx="560" cy="675" r="3.5" fill="currentColor" stroke="none"/>
     <circle cx="560" cy="725" r="3.5" fill="currentColor" stroke="none"/>
     <circle cx="560" cy="775" r="3.5" fill="currentColor" stroke="none"/>
+    </g>
   </svg>
 </div>
 
