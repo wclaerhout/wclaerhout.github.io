@@ -203,6 +203,8 @@ h1.post-title { font-family: var(--serif); font-size: 2rem; font-weight: 400; li
 .about-wrap { max-width: 600px; margin: 0 auto; padding: 4rem 2rem 6rem; }
 .about-wrap h1 { font-family: var(--serif); font-size: 1.8rem; font-weight: 400; margin-bottom: 2rem; }
 .about-wrap p { color: var(--ink-2); font-size: 0.97rem; line-height: 1.75; margin-bottom: 1.25rem; }
+.about-wrap p strong { color: var(--ink); font-weight: 600; }
+.about-wrap p a { color: var(--accent); }
 .about-wrap code { font-family: var(--mono); font-size: 0.82em; background: var(--code-bg); padding: 1px 5px; border-radius: 3px; color: var(--ink); }
 .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2.5rem 0; }
 .about-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.25rem; }

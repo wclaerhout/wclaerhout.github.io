@@ -3,41 +3,22 @@ layout: default
 title: About
 ---
 
+{% assign a = site.data.content.about %}
 <div class="about-wrap">
-  <a href="/" class="back-link">← all posts</a>
+  <a href="/" class="back-link">{{ a.back_link }}</a>
 
-  <h1>About this blog</h1>
+  <h1>{{ a.title }}</h1>
 
-  <p>
-    <strong style="color:var(--ink)">evo blog</strong> is a learning journal. I'm teaching myself to be a better Julia programmer by building things: implementing algorithms from scratch, reading papers and coding up the ideas, and generally spending time at the intersection of math and working code.
-  </p>
-  <p>
-    Every post is backed by a <a href="https://plutojl.org" style="color:var(--accent)">Pluto.jl</a> notebook. Pluto's reactivity means I can share interactive explorations — change a parameter, watch the plot update. The notebooks live on GitHub; links are in each post.
-  </p>
-  <p>
-    Topics I keep coming back to: numerical methods, optimisation, signal processing, and occasionally paper implementations when something in the ML literature catches my eye.
-  </p>
+  {% for para in a.paragraphs %}{{ para | markdownify }}{% endfor %}
 
   <div class="about-grid">
+    {% for card in a.cards %}
     <div class="about-card">
-      <div class="card-label">Language</div>
-      <div class="card-value">Julia 1.10+</div>
+      <div class="card-label">{{ card.label }}</div>
+      <div class="card-value">{{ card.value }}</div>
     </div>
-    <div class="about-card">
-      <div class="card-label">Notebooks</div>
-      <div class="card-value">Pluto.jl</div>
-    </div>
-    <div class="about-card">
-      <div class="card-label">Hosted on</div>
-      <div class="card-value">GitHub Pages</div>
-    </div>
-    <div class="about-card">
-      <div class="card-label">Started</div>
-      <div class="card-value">2025</div>
-    </div>
+    {% endfor %}
   </div>
 
-  <p>
-    If anything here is wrong or could be done better, open an issue on GitHub. I'm learning in public, mistakes included.
-  </p>
+  {{ a.closing | markdownify }}
 </div>

@@ -1,0 +1,36 @@
+# ─────────────────────────────────────────────────────────────
+# Site text content. Edit this file to change wording on the
+# homepage and about page — no HTML needed.
+# Markdown (links, **bold**, `code`) works inside paragraph text.
+# ─────────────────────────────────────────────────────────────
+
+home:
+  hero_label: "A Julia learning journal"
+  title: "Notebooks on algorithms, papers & the Julia language"
+  intro: "Working through ideas in public — from first implementations to deeper dives into numerical methods and ML."
+  tags:
+    - text: "julia"
+      accent: true
+    - text: "algorithms"
+    - text: "numerical-methods"
+    - text: "machine-learning"
+    - text: "paper-reviews"
+  latest_label: "Latest entries"
+
+about:
+  back_link: "← all posts"
+  title: "About this blog"
+  paragraphs:
+    - "**evo blog** is a learning journal. I'm teaching myself to be a better Julia programmer by building things: implementing algorithms from scratch, reading papers and coding up the ideas, and generally spending time at the intersection of math and working code."
+    - "Every post is backed by a [Pluto.jl](https://plutojl.org) notebook. Pluto's reactivity means I can share interactive explorations — change a parameter, watch the plot update. The notebooks live on GitHub; links are in each post."
+    - "Topics I keep coming back to: numerical methods, optimisation, signal processing, and occasionally paper implementations when something in the ML literature catches my eye."
+  cards:
+    - label: "Language"
+      value: "Julia 1.10+"
+    - label: "Notebooks"
+      value: "Pluto.jl"
+    - label: "Hosted on"
+      value: "GitHub Pages"
+    - label: "Started"
+      value: "2025"
+  closing: "If anything here is wrong or could be done better, open an issue on GitHub. I'm learning in public, mistakes included."

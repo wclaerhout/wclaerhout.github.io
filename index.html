@@ -6,15 +6,11 @@ title: evo blog
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-text">
-      <div class="hero-label">A Julia learning journal</div>
-      <h1>Notebooks on algorithms, papers &amp; the Julia language</h1>
-      <p>Working through ideas in public — from first implementations to deeper dives into numerical methods and ML.</p>
+      <div class="hero-label">{{ site.data.content.home.hero_label }}</div>
+      <h1>{{ site.data.content.home.title }}</h1>
+      <p>{{ site.data.content.home.intro }}</p>
       <div class="hero-tags">
-        <span class="tag accent">#julia</span>
-        <span class="tag">#algorithms</span>
-        <span class="tag">#numerical-methods</span>
-        <span class="tag">#machine-learning</span>
-        <span class="tag">#paper-reviews</span>
+        {% for tag in site.data.content.home.tags %}<span class="tag{% if tag.accent %} accent{% endif %}">#{{ tag.text }}</span>{% endfor %}
       </div>
     </div>
     <pre class="bulb-art">// Evolving through learning
@@ -31,7 +27,7 @@ title: evo blog
 
 <div class="main-layout">
   <main>
-    <div class="section-label">Latest entries</div>
+    <div class="section-label">{{ site.data.content.home.latest_label }}</div>
     <div class="post-list">
 
       {% for nb in site.data.notebooks limit:1 %}
