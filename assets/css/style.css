@@ -44,7 +44,7 @@ a { color: inherit; text-decoration: none; }
   width: clamp(0px, calc((100vw - 900px) / 2), 460px);
   height: auto;
   color: var(--ink-2);
-  opacity: 0.11;
+  opacity: 0.2;
 }
 .bg-tree-left  { left: 0;  transform: translateY(-50%) scaleX(-1); }
 .bg-tree-right { right: 0; transform: translateY(-50%); }
@@ -97,6 +97,7 @@ footer a { color: var(--accent); }
   align-items: start;
   transition: background 0.1s;
 }
+
 .post-item:hover .post-title { color: var(--accent); }
 .post-date { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-3); padding-top: 0.3rem; line-height: 1.4; }
 .post-title { font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--ink); transition: color 0.15s; margin-bottom: 0.3rem; }
