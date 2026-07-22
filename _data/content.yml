@@ -5,9 +5,9 @@
 # ─────────────────────────────────────────────────────────────
 
 home:
-  hero_label: "A Julia learning journal"
-  title: "Notebooks on algorithms, papers & the Julia language"
-  intro: "Working through ideas in public — from first implementations to deeper dives into numerical methods and ML."
+  hero_label: "A learning journal"
+  title: "Notebooks on algorithms, papers, tinkering & my PhD"
+  intro: "Working through ideas in public: from basic algorithms to deeper dives into numerical methods and ML."
   tags:
     - text: "julia"
       accent: true
@@ -21,9 +21,9 @@ about:
   back_link: "← all posts"
   title: "About this blog"
   paragraphs:
-    - "**evo blog** is a learning journal. I'm teaching myself to be a better Julia programmer by building things: implementing algorithms from scratch, reading papers and coding up the ideas, and generally spending time at the intersection of math and working code."
-    - "Every post is backed by a [Pluto.jl](https://plutojl.org) notebook. Pluto's reactivity means I can share interactive explorations — change a parameter, watch the plot update. The notebooks live on GitHub; links are in each post."
-    - "Topics I keep coming back to: numerical methods, optimisation, signal processing, and occasionally paper implementations when something in the ML literature catches my eye."
+    - "**evo blog** is a learning journal. I'm motivating myself to dive into topics that interest me or I want to understand more, typically at the intersection of mathematics and computer science. Not every notebook is complex, I believe that many interesting projects can be completed with fairly simple code or ideas and want to encourage myself to work out these interesting projects whether they are simple or complex."
+    - "Every post is backed by a [Pluto.jl](https://plutojl.org) notebook. The goal is to implement everything myself (no AI) to understand the core concepts I am implementing, enjoy the process of coding even though this means my code is not always optimal :). Pluto's reactivity means I can share interactive explorations — change a parameter, watch the plot update. The notebooks live on GitHub, in the repository of my site."
+    - "Topics I keep coming back to: modeling and simulation, numerical methods, (evolutionary) optimisation, ML and occasionally paper implementations when something in the literature catches my eye."
   cards:
     - label: "Language"
       value: "Julia 1.10+"
