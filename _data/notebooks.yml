@@ -6,6 +6,12 @@
 #  See ADDING-POSTS.md for the full how-to.
 # =============================================================
 
+- title: "What I learned from How to Take Smart Notes"
+  date: 2026-10-19
+  description: "Some takeaway notes on How to Take Smart Notes by Sönke Ahrens, which introduces the Zettelkasten system."
+  url: /notebooks/how-to-take-smart-notes.pdf
+  tags: [book, workflow]
+
 - title: "Bayesian Chess"
   date: 2026-06-01
   description_file: bayesian-chess.md
