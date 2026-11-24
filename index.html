@@ -3,62 +3,16 @@ layout: default
 title: evo blog
 ---
 
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-text">
-      <div class="hero-label">{{ site.data.content.home.hero_label }}</div>
-      <h1>{{ site.data.content.home.title }}</h1>
-      <p>{{ site.data.content.home.intro }}</p>
-      <div class="hero-tags">
-        {% for tag in site.data.content.home.tags %}<span class="tag{% if tag.accent %} accent{% endif %}">#{{ tag.text }}</span>{% endfor %}
-      </div>
-    </div>
-    <pre class="bulb-art">// Evolving through learning
-//
-//                .------ <span style="color:#389826">●</span>
-//           .----|
-//   --------|    '------ <span style="color:#CB3C33">●</span>
-//           |
-//           '----------- <span style="color:#9558B2">●</span>
-//
-//   julia&gt; evolve!(self)</pre>
+<div class="wrap">
+  <section class="intro">
+    <div class="kicker">{{ site.data.content.home.hero_label }}</div>
+    <h1>{{ site.data.content.home.title }}</h1>
+    <p>{{ site.data.content.home.intro }}</p>
+  </section>
+
+  <div class="section-label">{{ site.data.content.home.latest_label }}</div>
+  <div class="post-list">
+    {% for nb in site.data.notebooks limit:3 %}{% include entry.html nb=nb %}{% endfor %}
   </div>
-</section>
-
-<div class="main-layout">
-  <main>
-    <div class="section-label">{{ site.data.content.home.latest_label }}</div>
-    <div class="post-list">
-
-      {% for nb in site.data.notebooks limit:1 %}
-        <a href="{{ nb.url }}" class="post-item featured">
-          <div class="featured-meta">
-            <span class="featured-badge">Latest</span>
-            <span class="post-date">{{ nb.date | date: "%Y-%m-%d" }}</span>
-          </div>
-          <div class="post-title">{{ nb.title }}</div>
-          <div class="post-desc">{% if nb.description_file %}{% capture nb_desc %}{% include descriptions/{{ nb.description_file }} %}{% endcapture %}{{ nb_desc | markdownify }}{% else %}{{ nb.description }}{% endif %}</div>
-          <div class="post-tags">
-            {% for tag in nb.tags %}<span class="post-tag">#{{ tag }}</span>{% endfor %}
-          </div>
-        </a>
-      {% endfor %}
-
-    </div>
-  </main>
-
-  <aside class="sidebar">
-    <div class="sidebar-block">
-      <div class="sidebar-label">Topics</div>
-      {% for tag in site.tags %}
-      <a href="#" class="sidebar-link">{{ tag[0] }} <span class="sidebar-count">{{ tag[1].size }}</span></a>
-      {% endfor %}
-    </div>
-    <div class="sidebar-block">
-      <div class="sidebar-label">Built with</div>
-      <a href="https://julialang.org" class="sidebar-link" target="_blank">Julia ↗</a>
-      <a href="https://plutojl.org" class="sidebar-link" target="_blank">Pluto.jl ↗</a>
-      <a href="https://pages.github.com" class="sidebar-link" target="_blank">GitHub Pages ↗</a>
-    </div>
-  </aside>
+  <a href="/notebooks/" class="more-link">All posts →</a>
 </div>

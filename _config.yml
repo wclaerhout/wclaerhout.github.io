@@ -12,3 +12,12 @@ kramdown:
   syntax_highlighter_opts:
     block:
       line_numbers: false
+
+plugins:
+  - jekyll-seo-tag
+
+exclude:
+  - _tools
+  - Gemfile
+  - Gemfile.lock
+  - vendor

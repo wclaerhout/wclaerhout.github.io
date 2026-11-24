@@ -156,3 +156,27 @@ and pages rebuild automatically and the browser reloads. Stop with `Ctrl+C`.
 2. Preview locally with `jekyll serve` until it looks right.
 3. Merge `dev` → `main` (or push `dev` + open a PR). **That** push triggers the
    GitHub Pages deploy — `main` is always the live site.
+
+---
+
+## Readable version of Pluto notebooks (added with the 2026 redesign)
+
+When an entry's `url` points to a Pluto export (`/notebooks/<name>.html`), the
+deploy workflow runs `_tools/pluto2post.py` and builds a readable page at
+`/notebooks/<name>/` in the site's own layout. Lists on the site link there,
+and that page links back to the interactive export.
+
+The notebook is not re-run: text, code, printed output and plots are taken
+as-is from the results stored inside the export. Code you folded in Pluto
+stays hidden; the `using ...` cells at the top go into a collapsed "Setup code"
+box. Sliders (`@bind`) only work in the interactive version.
+
+To preview locally, run this once before `bundle exec jekyll serve`:
+
+```
+pip install msgpack pygments pyyaml
+python3 _tools/pluto2post.py
+```
+
+Tags now show as plain words ("book · workflow"), and the home page lists the
+three newest entries.

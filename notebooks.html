@@ -3,24 +3,39 @@ layout: default
 title: Posts
 ---
 
-<div class="main-layout" style="max-width:860px;margin:2.5rem auto;padding:0 1.5rem;">
-  <main style="width:100%">
-    <div class="section-label">Posts</div>
-    <div class="post-list">
+<div class="wrap">
+  <header class="page-head"><h1>Posts</h1></header>
 
-      {% for nb in site.data.notebooks %}
-      <a href="{{ nb.url }}" class="post-item featured">
-        <div class="featured-meta">
-          <span class="post-date">{{ nb.date | date: "%Y-%m-%d" }}</span>
-        </div>
-        <div class="post-title">{{ nb.title }}</div>
-        <div class="post-desc">{% if nb.description_file %}{% capture nb_desc %}{% include descriptions/{{ nb.description_file }} %}{% endcapture %}{{ nb_desc | markdownify }}{% else %}{{ nb.description }}{% endif %}</div>
-        <div class="post-tags">
-          {% for tag in nb.tags %}<span class="post-tag">#{{ tag }}</span>{% endfor %}
-        </div>
-      </a>
-      {% endfor %}
+  {% assign all_tags = "" | split: "" %}
+  {% for nb in site.data.notebooks %}{% assign all_tags = all_tags | concat: nb.tags %}{% endfor %}
+  {% assign all_tags = all_tags | uniq | sort %}
+  <div class="topics" role="group" aria-label="Filter by topic">
+    <button class="topic on" data-topic="">all</button>
+    {% for t in all_tags %}<button class="topic" data-topic="{{ t }}">{{ t }}</button>{% endfor %}
+  </div>
 
-    </div>
-  </main>
+  <div class="post-list">
+    {% for nb in site.data.notebooks %}{% include entry.html nb=nb %}{% endfor %}
+  </div>
 </div>
+
+<script>
+  (function () {
+    var buttons = document.querySelectorAll('.topic');
+    var entries = document.querySelectorAll('.post-list .entry');
+    function show(topic) {
+      buttons.forEach(function (b) { b.classList.toggle('on', b.dataset.topic === topic); });
+      entries.forEach(function (e) {
+        e.hidden = topic !== '' && e.dataset.tags.split(' ').indexOf(topic) === -1;
+      });
+    }
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () {
+        show(b.dataset.topic);
+        history.replaceState(null, '', b.dataset.topic ? '#' + b.dataset.topic : location.pathname);
+      });
+    });
+    var start = decodeURIComponent(location.hash.slice(1));
+    if (start) show(start);
+  })();
+</script>

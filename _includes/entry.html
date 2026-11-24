@@ -1,0 +1,12 @@
+{%- comment -%} One row in a post list. Pluto exports (/notebooks/x.html) link to their readable version (/notebooks/x/). {%- endcomment -%}
+{%- assign nb = include.nb -%}
+{%- assign href = nb.url -%}
+{%- if nb.url contains "/notebooks/" and nb.url contains ".html" -%}{%- assign href = nb.url | replace: ".html", "/" -%}{%- endif -%}
+<a href="{{ href }}" class="entry" data-tags="{{ nb.tags | join: ' ' }}">
+  <div class="entry-date">{{ nb.date | date: "%Y-%m-%d" }}</div>
+  <div>
+    <div class="entry-title">{{ nb.title }}</div>
+    <div class="entry-desc">{% if nb.description_file %}{% capture nb_desc %}{% include descriptions/{{ nb.description_file }} %}{% endcapture %}{{ nb_desc | markdownify }}{% else %}{{ nb.description }}{% endif %}</div>
+    {% if nb.tags %}<div class="entry-tags">{{ nb.tags | join: " · " }}</div>{% endif %}
+  </div>
+</a>
