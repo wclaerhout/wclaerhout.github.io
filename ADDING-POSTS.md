@@ -1,28 +1,35 @@
-# How to add a new post
+---
+layout: guide
+title: How to add content
+permalink: /guide/
+sitemap: false
+---
 
-Everything on the site is driven by **one file**: `_data/notebooks.yml`.
-Add an entry there + drop your Pluto HTML in `notebooks/`, and it shows up on
-both the **Home** page ("Latest entries") and the **Posts** tab automatically.
+# How to add content
+
+Everything in the post lists comes from **one file**: `_data/notebooks.yml`.
+Put your file in `notebooks/`, add an entry to that list, push to `main`, and it
+shows up on the **Home** page ("Latest entries", the three newest) and on the
+**Posts** page automatically. You never edit `index.html` or `notebooks.html`.
+
+This page lives at `/guide/`. It is not in the menu and asks search engines not
+to index it. The same text is `ADDING-POSTS.md` in the repository.
 
 ---
 
-## Steps
+## Quick checklist
 
-### 1. Export your Pluto notebook to HTML
+1. Put the file in `notebooks/` with a short, lowercase, dash-separated name.
+2. Add an entry at the **top** of `_data/notebooks.yml` (newest first).
+3. Optional: preview locally (see below).
+4. Commit and push to `main`. GitHub Pages rebuilds in about a minute.
 
-In Pluto, top-right menu → **Export** → **Static HTML**.
-Save the file with a short, lowercase, dash-separated name, e.g. `markov-chains.html`.
+---
 
-### 2. Put the HTML in the `notebooks/` folder
+## A Pluto notebook
 
-```
-notebooks/markov-chains.html
-```
-
-### 3. Add an entry to `_data/notebooks.yml`
-
-Open `_data/notebooks.yml` and add a block at the **top** (newest first — the top
-entry is the one shown as "Latest" on the home page):
+In Pluto, top-right menu → **Export** → **Static HTML**. Save it as, for example,
+`notebooks/markov-chains.html`, then add:
 
 ```yaml
 - title: "Markov Chains"
@@ -32,86 +39,88 @@ entry is the one shown as "Latest" on the home page):
   tags: [markov, probability, pluto]
 ```
 
-Field guide:
+The site builds a readable post at `/notebooks/markov-chains/` from the export.
+The notebook is not re-run: text, code, printed output and plots are taken as-is
+from the results stored inside the export.
+
+- Code you folded in Pluto stays hidden. The `using ...` cells at the top go into
+  a collapsed "Setup code" box.
+- Readers can hide all code with the **Hide code** button. Raw values a cell
+  returns (arrays, models, tables) hide with it; text, plots and what you print
+  with `println` stay.
+- Sliders (`@bind`) only work in the interactive version, which the post links to.
+
+## A PDF (for example written in Typst)
+
+Save it as `notebooks/my-typst-write-up.pdf` and add:
+
+```yaml
+- title: "My Typst write-up"
+  date: 2026-12-01
+  description: "One or two sentences."
+  url: /notebooks/my-typst-write-up.pdf
+  tags: [typst, notes]
+```
+
+The site builds a post at `/notebooks/my-typst-write-up/` that shows every page
+as a sharp image under your title, date, tags and description, with
+**Download PDF** and **Open full screen** buttons. The PDF itself is not changed.
+
+## An article written directly (Markdown or HTML)
+
+For a post you write straight into the site, like the Cross Entropy Method one,
+create `_posts/2026-12-01-my-post.md` (the date in the name is required):
+
+```markdown
+---
+layout: post
+title: "My post"
+date: 2026-12-01
+tags: [julia]
+lede: "Optional intro line shown under the title."
+---
+
+Your text in Markdown. Maths works with $$ ... $$ or \( ... \).
+```
+
+It is published at `/posts/my-post/`. To list it on Home and Posts as well, add
+an entry to `_data/notebooks.yml` with `url: /posts/my-post/`.
+
+---
+
+## The fields in `_data/notebooks.yml`
 
 | Field              | What to put                                                        |
 |--------------------|--------------------------------------------------------------------|
 | `title`            | Display title, in quotes.                                          |
-| `date`             | `YYYY-MM-DD`. Controls ordering and the date shown on the cards.   |
+| `date`             | `YYYY-MM-DD`. Controls ordering and the date shown in lists.       |
 | `description`      | Short blurb — one or two sentences. Shown under the title.         |
 | `description_file` | *Optional.* Use instead of `description` for longer text (see below). |
-| `url`              | `/notebooks/<your-file>.html` (must match the file from step 2).   |
-| `tags`             | List of words, no `#`. They render as `#tag`.                      |
+| `url`              | `/notebooks/<file>.html` or `.pdf`, or a `/posts/...` address.     |
+| `tags`             | List of words, no `#`. Shown as "word · word" and used by the topic buttons on the Posts page. |
 
 ### Longer descriptions (optional)
 
-For a short blurb, just use `description:` as above. If you want to write a
-longer description — several sentences, multiple paragraphs, or Markdown — put
-the text in its own file so the YAML stays clean.
+For a longer description — several sentences, multiple paragraphs, or
+Markdown — put the text in its own file so the YAML stays clean.
 
 1. Create a Markdown file under `_includes/descriptions/`, e.g.
-   `_includes/descriptions/markov-chains.md`:
-
-   ```markdown
-   A longer write-up of what the notebook explores. You can use **Markdown**
-   here — multiple paragraphs, emphasis, links — and it renders under the
-   title on the cards.
-   ```
-
+   `_includes/descriptions/markov-chains.md`.
 2. In `_data/notebooks.yml`, drop the `description:` line and point to the file
-   with `description_file:` (just the filename, no folder):
+   with `description_file: markov-chains.md` (just the filename, no folder).
 
-   ```yaml
-   - title: "Markov Chains"
-     date: 2026-07-01
-     description_file: markov-chains.md
-     url: /notebooks/markov-chains.html
-     tags: [markov, probability, pluto]
-   ```
-
-Rules:
-
-- If `description_file` is set it wins; otherwise `description` is used.
-- The path is relative to `_includes/descriptions/` — give the filename only.
-- Content is rendered as Markdown.
-
-The **Bayesian Chess** entry uses this form — see
-`_includes/descriptions/bayesian-chess.md` for a working example.
-
-### 4. Commit and push
-
-```
-git add notebooks/markov-chains.html _data/notebooks.yml
-# also add the description file if you made one:
-# git add _includes/descriptions/markov-chains.md
-git commit -m "add Markov chains notebook"
-git push
-```
-
-Wait ~1 minute for GitHub Pages to rebuild, then hard-refresh (Ctrl+Shift+R).
-
----
-
-## Notes
-
-- **Order = newest at top.** The first entry in `_data/notebooks.yml` is the
-  featured "Latest" post on the home page.
-- **The home page updates itself.** You do NOT edit `index.html` or
-  `notebooks.html` — they both read from `_data/notebooks.yml`.
-- **Clicking a card opens the Pluto HTML directly** on the site
-  (`/notebooks/<file>.html`) — no redirect to GitHub.
-- One existing entry (Cross Entropy Method) points at a hand-written article
-  (`/posts/cross-entropy-method/`) instead of a raw Pluto file. For your normal
-  Pluto notebooks, just use the `/notebooks/...html` form shown above.
+If `description_file` is set it wins; otherwise `description` is used. The
+**Bayesian Chess** entry uses this form.
 
 ---
 
 ## Editing site text (home + about)
 
-All wording on the **home page** (hero label, title, intro, tags) and the
-**about page** (title, paragraphs, info cards, closing line) lives in one file:
+All wording on the **home page** (label, title, intro) and the **about page**
+(title, paragraphs, info cards, closing line) lives in one file:
 `_data/content.yml`. Edit that file — no HTML needed. Markdown (`**bold**`,
-`[links](url)`, `` `code` ``) works inside the about paragraphs.
+`[links](url)`, `` `code` ``) works inside the about paragraphs. The `tags` list
+under `home` is kept in the file but no longer shown on the page.
 
 ---
 
@@ -136,6 +145,7 @@ Then, in the repo:
 ```powershell
 gem install bundler
 bundle install
+pip install msgpack pygments pyyaml pymupdf
 ```
 
 > Installed to `C:\Ruby33-x64`. If `ruby -v` isn't found, reopen the terminal or
@@ -144,52 +154,18 @@ bundle install
 ### Every time you want to preview
 
 ```powershell
+python _tools/build_posts.py
 bundle exec jekyll serve --livereload
 ```
 
-Open **http://localhost:4000**. Edits to `_data/*.yml`, `assets/css/`, layouts,
-and pages rebuild automatically and the browser reloads. Stop with `Ctrl+C`.
+The first line builds the readable posts for your notebooks and PDFs; run it
+again after adding or re-exporting one. Open **http://localhost:4000**. Edits to
+`_data/*.yml`, `assets/css/`, layouts and pages rebuild automatically and the
+browser reloads. Stop with `Ctrl+C`.
 
 ### Recommended workflow
 
 1. Work on a `dev` branch, not `main`.
-2. Preview locally with `jekyll serve` until it looks right.
-3. Merge `dev` → `main` (or push `dev` + open a PR). **That** push triggers the
-   GitHub Pages deploy — `main` is always the live site.
-
----
-
-## Readable posts for Pluto notebooks and PDFs (added with the 2026 redesign)
-
-When an entry's `url` points to a file in `notebooks/`, the deploy workflow runs
-`_tools/build_posts.py` and builds a readable page at `/notebooks/<name>/` in
-the site's own layout. Lists on the site link there.
-
-**Pluto exports** (`/notebooks/<name>.html`): the notebook is not re-run. Text,
-code, printed output and plots are taken as-is from the results stored inside
-the export. Code you folded in Pluto stays hidden; the `using ...` cells at the
-top go into a collapsed "Setup code" box. Sliders (`@bind`) only work in the
-interactive version, which the page links to.
-
-**PDFs** (`/notebooks/<name>.pdf`, e.g. written in Typst): every page is shown
-as a sharp image under your title, date, tags and description, with "Download
-PDF" and "Open full screen" buttons. The PDF itself is not changed. Add it to
-`_data/notebooks.yml` exactly like a notebook:
-
-```yaml
-- title: "My Typst write-up"
-  date: 2026-12-01
-  description: "One or two sentences."
-  url: /notebooks/my-typst-write-up.pdf
-  tags: [typst, notes]
-```
-
-To preview locally, run this once before `bundle exec jekyll serve`:
-
-```
-pip install msgpack pygments pyyaml pymupdf
-python3 _tools/build_posts.py
-```
-
-Tags now show as plain words ("book · workflow"), and the home page lists the
-three newest entries.
+2. Preview locally until it looks right.
+3. Push the branch and open a pull request. GitHub builds it as a check, without
+   publishing. Merging into `main` deploys — `main` is always the live site.

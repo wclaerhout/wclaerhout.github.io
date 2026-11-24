@@ -252,3 +252,10 @@ h1.post-title {
    text, plots and what the notebook printed itself stay. Cells with folded code are left alone. */
 .code-hidden .nb-cell:has(> .nb-code):not(.open) > .nb-out:not(.nb-stdout),
 .code-hidden .nb-cell:has(> .nb-code):not(.open) > .nb-table { display: none; }
+
+/* ── Guide page ── */
+.guide h1 { font-size: 2rem; letter-spacing: -.03em; margin-top: 0; }
+.guide h2 { padding-top: .6rem; border-top: 1px solid var(--rule); }
+.guide hr { display: none; }
+.guide table { display: block; overflow-x: auto; }
+.guide blockquote { font-style: normal; font-size: .95rem; }
