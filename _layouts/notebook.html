@@ -34,6 +34,17 @@ layout: default
         peek.textContent = open ? '▾ hide code' : '▸ show code';
       });
       code.parentElement.insertBefore(peek, code);
+      // Raw return values (not printed text) sit behind a small "show output" link.
+      var raw = code.parentElement.querySelectorAll(':scope > .nb-out:not(.nb-stdout), :scope > .nb-table');
+      if (raw.length) {
+        var out = document.createElement('button');
+        out.type = 'button'; out.className = 'out-peek'; out.textContent = '▸ show output';
+        out.addEventListener('click', function () {
+          var o = code.parentElement.classList.toggle('out-open');
+          out.textContent = o ? '▾ hide output' : '▸ show output';
+        });
+        code.insertAdjacentElement('afterend', out);
+      }
     });
     function set(hidden) {
       document.body.classList.toggle('code-hidden', hidden);

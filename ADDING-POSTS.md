@@ -45,9 +45,9 @@ from the results stored inside the export.
 
 - Code you folded in Pluto stays hidden. The `using ...` cells at the top go into
   a collapsed "Setup code" box.
-- Readers can hide all code with the **Hide code** button. Raw values a cell
-  returns (arrays, models, tables) hide with it; text, plots and what you print
-  with `println` stay.
+- Code is shown by default; readers can hide it with the **Hide code** button.
+  Raw values a cell returns (arrays, models, tables) sit behind a small
+  "show output" link; text, plots and what you print with `println` always show.
 - Sliders (`@bind`) only work in the interactive version, which the post links to.
 
 ## A PDF (for example written in Typst)
