@@ -159,23 +159,36 @@ and pages rebuild automatically and the browser reloads. Stop with `Ctrl+C`.
 
 ---
 
-## Readable version of Pluto notebooks (added with the 2026 redesign)
+## Readable posts for Pluto notebooks and PDFs (added with the 2026 redesign)
 
-When an entry's `url` points to a Pluto export (`/notebooks/<name>.html`), the
-deploy workflow runs `_tools/pluto2post.py` and builds a readable page at
-`/notebooks/<name>/` in the site's own layout. Lists on the site link there,
-and that page links back to the interactive export.
+When an entry's `url` points to a file in `notebooks/`, the deploy workflow runs
+`_tools/build_posts.py` and builds a readable page at `/notebooks/<name>/` in
+the site's own layout. Lists on the site link there.
 
-The notebook is not re-run: text, code, printed output and plots are taken
-as-is from the results stored inside the export. Code you folded in Pluto
-stays hidden; the `using ...` cells at the top go into a collapsed "Setup code"
-box. Sliders (`@bind`) only work in the interactive version.
+**Pluto exports** (`/notebooks/<name>.html`): the notebook is not re-run. Text,
+code, printed output and plots are taken as-is from the results stored inside
+the export. Code you folded in Pluto stays hidden; the `using ...` cells at the
+top go into a collapsed "Setup code" box. Sliders (`@bind`) only work in the
+interactive version, which the page links to.
+
+**PDFs** (`/notebooks/<name>.pdf`, e.g. written in Typst): every page is shown
+as a sharp image under your title, date, tags and description, with "Download
+PDF" and "Open full screen" buttons. The PDF itself is not changed. Add it to
+`_data/notebooks.yml` exactly like a notebook:
+
+```yaml
+- title: "My Typst write-up"
+  date: 2026-12-01
+  description: "One or two sentences."
+  url: /notebooks/my-typst-write-up.pdf
+  tags: [typst, notes]
+```
 
 To preview locally, run this once before `bundle exec jekyll serve`:
 
 ```
-pip install msgpack pygments pyyaml
-python3 _tools/pluto2post.py
+pip install msgpack pygments pyyaml pymupdf
+python3 _tools/build_posts.py
 ```
 
 Tags now show as plain words ("book · workflow"), and the home page lists the

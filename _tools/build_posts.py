@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
-"""Turn Pluto static-HTML exports into readable posts that use the site's own layout.
+"""Turn Pluto exports and PDFs in notebooks/ into readable posts in the site's own layout.
 
-For every entry in _data/notebooks.yml whose url is a Pluto export
-(/notebooks/<name>.html), this reads the results Pluto already stored inside
-the export and writes notebooks/<name>/index.html. The notebook is NOT re-run:
-text, code, printed output and plots come out exactly as they are in your
-notebook. Code you folded in Pluto stays hidden, code you left open is shown.
-The original export stays at /notebooks/<name>.html as the interactive version.
+For every entry in _data/notebooks.yml:
 
-Usage (from the repository root):  python3 _tools/pluto2post.py
-Needs: pip install msgpack pygments pyyaml
+* url /notebooks/<name>.html (a Pluto export): reads the results Pluto already
+  stored inside the export and writes notebooks/<name>/index.html. The notebook
+  is NOT re-run: text, code, printed output and plots come out exactly as they
+  are in your notebook. Code you folded in Pluto stays hidden. The original
+  export stays at /notebooks/<name>.html as the interactive version.
+
+* url /notebooks/<name>.pdf (e.g. written in Typst): draws every page as a
+  vector image (notebooks/<name>/page-N.svg) and writes notebooks/<name>/index.html,
+  a post that shows the pages with a download button. The PDF itself is untouched.
+
+Usage (from the repository root):  python3 _tools/build_posts.py
+Needs: pip install msgpack pygments pyyaml pymupdf
 """
 import base64, html, json, os, re, sys
 
@@ -190,15 +195,51 @@ def convert(state):
     return "\n".join(parts)
 
 
-def front_matter(entry, interactive_url):
+def front_matter(entry, **extra):
     fm = {
-        "layout": "notebook",
         "title": entry.get("title", ""),
         "date": str(entry.get("date", "")),
         "tags": entry.get("tags", []) or [],
-        "interactive": interactive_url,
     }
+    fm.update(extra)
     return "---\n" + yaml.safe_dump(fm, allow_unicode=True, sort_keys=False) + "---\n"
+
+
+def build_pluto(entry, url, name):
+    src = os.path.join(ROOT, "notebooks", name + ".html")
+    state = load_state(src)
+    if state is None:
+        print(f"skip {url}: not a Pluto export", file=sys.stderr)
+        return False
+    dst_dir = os.path.join(ROOT, "notebooks", name)
+    os.makedirs(dst_dir, exist_ok=True)
+    with open(os.path.join(dst_dir, "index.html"), "w", encoding="utf-8") as f:
+        f.write(front_matter(entry, layout="notebook", interactive=url))
+        f.write(convert(state) + "\n")
+    return True
+
+
+def build_pdf(entry, url, name):
+    import pymupdf  # only needed for PDFs
+
+    src = os.path.join(ROOT, "notebooks", name + ".pdf")
+    dst_dir = os.path.join(ROOT, "notebooks", name)
+    os.makedirs(dst_dir, exist_ok=True)
+    pages = []
+    with pymupdf.open(src) as doc:
+        for i, page in enumerate(doc, start=1):
+            fname = f"page-{i}.svg"
+            with open(os.path.join(dst_dir, fname), "w", encoding="utf-8") as f:
+                f.write(page.get_svg_image(text_as_path=True))
+            pages.append(fname)
+    extra = {"layout": "pdf", "pdf": url, "pages": pages}
+    if entry.get("description_file"):
+        extra["description_file"] = entry["description_file"]
+    elif entry.get("description"):
+        extra["description"] = entry["description"]
+    with open(os.path.join(dst_dir, "index.html"), "w", encoding="utf-8") as f:
+        f.write(front_matter(entry, **extra))
+    return True
 
 
 def main():
@@ -206,25 +247,17 @@ def main():
     done = 0
     for e in entries:
         url = str(e.get("url", ""))
-        m = re.fullmatch(r"/notebooks/([^/]+)\.html", url)
+        m = re.fullmatch(r"/notebooks/([^/]+)\.(html|pdf)", url)
         if not m:
             continue
-        src = os.path.join(ROOT, "notebooks", m.group(1) + ".html")
-        if not os.path.exists(src):
+        name, ext = m.groups()
+        if not os.path.exists(os.path.join(ROOT, "notebooks", f"{name}.{ext}")):
             print(f"skip {url}: file not found", file=sys.stderr)
             continue
-        state = load_state(src)
-        if state is None:
-            print(f"skip {url}: not a Pluto export", file=sys.stderr)
-            continue
-        dst_dir = os.path.join(ROOT, "notebooks", m.group(1))
-        os.makedirs(dst_dir, exist_ok=True)
-        with open(os.path.join(dst_dir, "index.html"), "w", encoding="utf-8") as f:
-            f.write(front_matter(e, url))
-            f.write(convert(state) + "\n")
-        done += 1
-        print(f"converted {url} -> /notebooks/{m.group(1)}/")
-    print(f"{done} notebook(s) converted")
+        if (build_pluto if ext == "html" else build_pdf)(e, url, name):
+            done += 1
+            print(f"built {url} -> /notebooks/{name}/")
+    print(f"{done} post(s) built")
 
 
 if __name__ == "__main__":
