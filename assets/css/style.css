@@ -1,15 +1,16 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:      #f8f9fb;
+  --bg:      #fbfaf7;   /* warm paper */
   --surface: #ffffff;
-  --ink:     #1f2430;
-  --ink-2:   #454b58;
-  --ink-3:   #80868f;
-  --rule:    #e0e3e8;
-  --accent:  #22344f;   /* ink navy */
-  --accent-soft: #e8ecf3;
-  --code-bg: #f0f2f6;
+  --ink:     #1f1f1f;
+  --ink-2:   #46443f;
+  --ink-3:   #8a857c;
+  --rule:    #e7e3db;
+  --accent:  #22344f;   /* ink navy: titles, labels, rules */
+  --second:  #4f7a5c;   /* sage green: links and things you can click */
+  --accent-soft: #eceae4;
+  --code-bg: #f3f1ec;
   --sans:  'Inter', system-ui, sans-serif;
   --serif: 'STIX Two Text', Georgia, serif;
   --mono:  'JetBrains Mono', ui-monospace, monospace;
@@ -205,3 +206,14 @@ h1.post-title {
 .nb-setup summary:hover { color: var(--accent); }
 .nb-setup .nb-code { margin-top: .6rem; }
 .prose pre, .highlight pre { tab-size: 4; -moz-tab-size: 4; }
+
+/* ── Second colour (sage): links and interactive bits; titles stay navy ── */
+.intro .kicker { color: var(--second); }
+.more-link, .prose a, .about-wrap p a { color: var(--second) !important; }
+.back-link:hover, .site-footer a:hover { color: var(--second); }
+.entry:hover .entry-title { color: var(--accent); }
+.topic:hover { border-color: var(--second); color: var(--second); }
+.topic.on { background: var(--second); border-color: var(--second); color: #fff; }
+.interactive-link, .notebook-link { color: var(--second) !important; border-color: var(--second); }
+.interactive-link:hover, .notebook-link:hover { background: var(--second); color: #fff !important; }
+.prose blockquote, .nb-html .admonition { border-left-color: var(--second); }
