@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% if page.title and page.title != site.title %}{{ page.title }} — {% endif %}{{ site.title }}</title>
   {% seo title=false %}
+  {% if page.url == "/" and site.data.content.profile.photo != "" %}<meta name="robots" content="noimageindex">{% endif %}
   {% if page.layout == "guide" %}<meta name="robots" content="noindex, nofollow" />{% endif %}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

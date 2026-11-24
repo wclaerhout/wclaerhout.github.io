@@ -126,6 +126,9 @@ anything left empty is simply not shown.
 - `photo`: put a portrait (roughly 4:5, about 400×500 px) in `assets/img/`,
   for example `assets/img/ward.jpg`, and set `photo: "/assets/img/ward.jpg"`.
   Don't start the file name with `_`, Jekyll skips those.
+  Search engines are asked not to put images from `assets/img/` in image
+  search (`robots.txt` plus a `noimageindex` tag). That keeps it out of Google
+  Images, but anyone visiting the page can still see and save it.
 - `links`: fill in the `url` of each link you want. For email use
   `mailto:you@ugent.be`. For your CV, put the PDF in `assets/` (for example
   `assets/cv.pdf`) and set `url: "/assets/cv.pdf"`. Empty links are hidden.

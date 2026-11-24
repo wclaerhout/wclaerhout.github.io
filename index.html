@@ -14,7 +14,7 @@ title: evo blog
         {% for l in me.links %}{% if l.url != "" %}<a href="{{ l.url }}"{% unless l.url contains 'mailto:' or l.url contains '.pdf' %} target="_blank" rel="noopener"{% endunless %}>{{ l.label }}</a>{% endif %}{% endfor %}
       </div>
     </div>
-    {% if me.photo != "" %}<img class="portrait" src="{{ me.photo }}" alt="{{ me.name }}">{% endif %}
+    {% if me.photo != "" %}<img class="portrait" src="{{ me.photo }}" alt="Portrait">{% endif %}
   </section>
 
   {% if site.data.publications and site.data.publications.size > 0 %}
