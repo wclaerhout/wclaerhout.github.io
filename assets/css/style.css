@@ -262,3 +262,37 @@ h1.post-title {
 .guide hr { display: none; }
 .guide table { display: block; overflow-x: auto; }
 .guide blockquote { font-style: normal; font-size: .95rem; }
+
+/* ── Home: profile hero, research, journal ── */
+.hero { padding: 4.5rem 0 3rem; }
+.hero.has-photo { display: grid; grid-template-columns: 1fr 170px; gap: 2.5rem; align-items: start; }
+.hero .kicker { margin-bottom: .9rem; color: var(--second); }
+.hero h1 { font-family: var(--sans); font-weight: 700; font-size: 2.4rem; letter-spacing: -.03em; line-height: 1.1; margin-bottom: 1rem; }
+.hero p { font-size: 1.15rem; line-height: 1.6; color: var(--ink-2); max-width: 34em; margin-bottom: 1rem; }
+.hero p a { color: var(--second); }
+.portrait { width: 170px; height: 210px; object-fit: cover; border-radius: 3px; border: 1px solid var(--rule); }
+.profile-links { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; font-family: var(--sans); font-size: .9rem; }
+.profile-links a { color: var(--second); }
+.profile-links a:hover { text-decoration: underline; }
+.home-block { margin-bottom: 3.5rem; scroll-margin-top: 1rem; }
+.pubs { margin-top: .2rem; }
+.pub { display: grid; grid-template-columns: 7rem 1fr; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--rule); }
+.pub-year { font-family: var(--sans); font-size: .82rem; color: var(--ink-3); padding-top: .2rem; }
+.pub-title { font-family: var(--sans); font-weight: 600; font-size: 1.04rem; letter-spacing: -.01em; margin-bottom: .2rem; }
+.pub-authors, .pub-venue { font-size: 1rem; color: var(--ink-2); line-height: 1.5; }
+.pub-authors b { color: var(--ink); font-weight: 600; }
+.pub-venue { font-style: italic; }
+.pub-links { display: flex; gap: .9rem; margin-top: .3rem; font-family: var(--sans); font-size: .8rem; }
+.pub-links a { color: var(--second); }
+.pub-links a:hover { text-decoration: underline; }
+.journal-title { font-family: var(--sans); font-weight: 700; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.2; margin: 1.2rem 0 .5rem; }
+.journal-intro { font-size: 1.08rem; line-height: 1.6; color: var(--ink-2); max-width: 36em; margin-bottom: .6rem; }
+@media (max-width: 640px) {
+  .hero { padding: 3rem 0 2rem; }
+  .hero.has-photo { grid-template-columns: 1fr; gap: 1.5rem; }
+  .hero.has-photo .portrait { order: -1; width: 120px; height: 150px; }
+  .hero h1 { font-size: 1.9rem; }
+  .hero p { font-size: 1.08rem; }
+  .pub { grid-template-columns: 1fr; gap: .2rem; }
+  .pub-year { padding-top: 0; }
+}

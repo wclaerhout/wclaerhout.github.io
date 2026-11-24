@@ -34,3 +34,27 @@ about:
     - label: "Started"
       value: "2025"
   closing: "If anything here is wrong or could be done better, open an issue on GitHub. I'm learning in public, mistakes included."
+
+# ─────────────────────────────────────────────────────────────
+# About you, shown at the top of the home page. Leave a field empty ("")
+# to hide it. Publications come from research/publications.bib (the same
+# .bib as your CV); see /guide/.
+# ─────────────────────────────────────────────────────────────
+profile:
+  name: "Ward Claerhout"
+  role: "PhD researcher · KERMIT, Ghent University"
+  bio: ""        # two or three sentences in your own words
+  photo: ""      # e.g. /assets/img/ward.jpg (portrait, roughly 4:5)
+  me: "Claerhout"  # your surname, printed in bold in author lists
+  research_label: "Research"
+  links:
+    - label: "CV (PDF)"
+      url: ""
+    - label: "Google Scholar"
+      url: ""
+    - label: "ORCID"
+      url: ""
+    - label: "GitHub"
+      url: "https://github.com/wclaerhout"
+    - label: "Email"
+      url: ""     # e.g. mailto:you@ugent.be

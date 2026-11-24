@@ -24,6 +24,7 @@
     <a href="/" class="site-name">{{ site.title }}</a>
     <nav class="site-nav">
       <a href="/"{% if page.url == "/" %} class="on"{% endif %}>Home</a>
+      {% if site.data.publications and site.data.publications.size > 0 %}<a href="/#research">Research</a>{% endif %}
       <a href="/notebooks/"{% if page.url == "/notebooks/" %} class="on"{% endif %}>Posts</a>
       <a href="/about/"{% if page.url == "/about/" %} class="on"{% endif %}>About</a>
       <a href="https://github.com/wclaerhout" target="_blank" rel="noopener">GitHub ↗</a>

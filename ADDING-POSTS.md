@@ -114,9 +114,44 @@ If `description_file` is set it wins; otherwise `description` is used. The
 
 ---
 
+## Your profile and research (top of the home page)
+
+The top of the home page shows your name, role, a short bio, a photo and links,
+then a **Research** list, then the learning journal. All of it is optional:
+anything left empty is simply not shown.
+
+**Profile.** In `_data/content.yml`, under `profile:`:
+
+- `bio`: two or three sentences in your own words. Markdown links work.
+- `photo`: put a portrait (roughly 4:5, about 400×500 px) in `assets/img/`,
+  for example `assets/img/ward.jpg`, and set `photo: "/assets/img/ward.jpg"`.
+  Don't start the file name with `_`, Jekyll skips those.
+- `links`: fill in the `url` of each link you want. For email use
+  `mailto:you@ugent.be`. For your CV, put the PDF in `assets/` (for example
+  `assets/cv.pdf`) and set `url: "/assets/cv.pdf"`. Empty links are hidden.
+
+**Publications.** Copy the same `.bib` you use for your CV to
+`research/publications.bib`. The build reads it, newest year first, and prints
+your name in bold (set by `me:` in `profile`, your surname). The Research list
+and the **Research** menu item only appear once there is at least one entry.
+Links come from these fields of each entry:
+
+| Field in the .bib                    | Link shown |
+|--------------------------------------|------------|
+| `pdf = {/assets/papers/x.pdf}`       | PDF        |
+| `doi = {10.1234/abcd}`               | DOI        |
+| `url = {...}` (only when no `doi`)   | Link       |
+| `eprint` + `archivePrefix = {arXiv}` | arXiv      |
+| `code = {https://github.com/...}`    | Code       |
+
+Run `python _tools/build_posts.py` again after changing the `.bib` to see it
+in the local preview.
+
+---
+
 ## Editing site text (home + about)
 
-All wording on the **home page** (label, title, intro) and the **about page**
+All wording on the **home page** (profile, journal label, title, intro) and the **about page**
 (title, paragraphs, info cards, closing line) lives in one file:
 `_data/content.yml`. Edit that file — no HTML needed. Markdown (`**bold**`,
 `[links](url)`, `` `code` ``) works inside the about paragraphs. The `tags` list
