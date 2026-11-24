@@ -3,6 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["main"]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -20,6 +21,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Turn Pluto exports into readable posts
+        run: |
+          pip install msgpack pygments pyyaml
+          python3 _tools/pluto2post.py
       - uses: actions/jekyll-build-pages@v1
         with:
           source: ./
@@ -29,6 +37,7 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
 
   deploy:
+    if: github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

@@ -4,76 +4,39 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% if page.title and page.title != site.title %}{{ page.title }} — {% endif %}{{ site.title }}</title>
+  {% seo title=false %}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/css/style.css" />
+  {% if page.layout == "post" or page.layout == "notebook" %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+  <script defer src="/assets/js/math.js"></script>
+  {% endif %}
 </head>
 <body>
 
-<div class="bg-art" aria-hidden="true">
-  <svg class="bg-tree bg-tree-left" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet" fill="none">
-    <use href="#phylo-tree" />
-  </svg>
-  <svg class="bg-tree bg-tree-right" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet" fill="none">
-    <use href="#phylo-tree" />
-  </svg>
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <g id="phylo-tree" fill="none">
-    <path d="M30 400 H90
-             M90 200 V600  M90 200 H180  M90 600 H180
-             M180 100 V300  M180 100 H300  M180 300 H300
-             M180 500 V700  M180 500 H300  M180 700 H300
-             M300 50 V150   M300 50 H440   M300 150 H440
-             M300 250 V350  M300 250 H440  M300 350 H440
-             M300 450 V550  M300 450 H440  M300 550 H440
-             M300 650 V750  M300 650 H440  M300 750 H440
-             M440 25 V75    M440 25 H560   M440 75 H560
-             M440 125 V175  M440 125 H560  M440 175 H560
-             M440 225 V275  M440 225 H560  M440 275 H560
-             M440 325 V375  M440 325 H560  M440 375 H560
-             M440 425 V475  M440 425 H560  M440 475 H560
-             M440 525 V575  M440 525 H560  M440 575 H560
-             M440 625 V675  M440 625 H560  M440 675 H560
-             M440 725 V775  M440 725 H560  M440 775 H560"
-          stroke="currentColor" stroke-width="1.5"
-          stroke-linecap="round" stroke-linejoin="round" />
-    <circle cx="560" cy="25"  r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="75"  r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="125" r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="175" r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="225" r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="275" r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="325" r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="375" r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="425" r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="475" r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="525" r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="575" r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="625" r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="675" r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="725" r="3.5" fill="currentColor" stroke="none"/>
-    <circle cx="560" cy="775" r="3.5" fill="currentColor" stroke="none"/>
-    </g>
-  </svg>
-</div>
-
-<header>
-  <div class="header-inner">
-    <a href="/" class="logo">🌿 evo<span>.</span>blog</a>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/notebooks/">Posts</a>
-      <a href="/about/">About</a>
-      <a href="https://github.com/wclaerhout" target="_blank">GitHub ↗</a>
+<header class="site-header">
+  <div class="wrap">
+    <a href="/" class="site-name">{{ site.title }}</a>
+    <nav class="site-nav">
+      <a href="/"{% if page.url == "/" %} class="on"{% endif %}>Home</a>
+      <a href="/notebooks/"{% if page.url == "/notebooks/" %} class="on"{% endif %}>Posts</a>
+      <a href="/about/"{% if page.url == "/about/" %} class="on"{% endif %}>About</a>
+      <a href="https://github.com/wclaerhout" target="_blank" rel="noopener">GitHub ↗</a>
     </nav>
   </div>
 </header>
 
 {{ content }}
 
-<footer>
-  evo blog · <a href="/LICENSE">MIT License</a> · built with Julia &amp; <a href="https://pages.github.com">GitHub Pages</a>
+<footer class="site-footer">
+  <div class="wrap">
+    {% include skyline.svg %}
+    {{ site.title }} · <a href="/LICENSE">MIT License</a> · built with Julia &amp; <a href="https://pages.github.com">GitHub Pages</a>
+  </div>
 </footer>
 
 </body>
