@@ -248,3 +248,7 @@ h1.post-title {
 .code-hidden .code-peek { display: inline-block; }
 .code-hidden .nb-code, .code-hidden .nb-setup { display: none; }
 .code-hidden .nb-cell.open .nb-code { display: block; }
+/* With code hidden, raw values a code cell returns (arrays, models, tables) go too;
+   text, plots and what the notebook printed itself stay. Cells with folded code are left alone. */
+.code-hidden .nb-cell:has(> .nb-code):not(.open) > .nb-out:not(.nb-stdout),
+.code-hidden .nb-cell:has(> .nb-code):not(.open) > .nb-table { display: none; }
