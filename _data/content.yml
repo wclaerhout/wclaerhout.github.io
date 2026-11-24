@@ -44,7 +44,7 @@ profile:
   name: "Ward Claerhout"
   role: "PhD researcher · KERMIT, Ghent University"
   bio: ""        # two or three sentences in your own words
-  photo: ""      # e.g. /assets/img/ward.jpg (portrait, roughly 4:5)
+  photo: "/assets/img/portrait.jpg"      # e.g. /assets/img/portrait.jpg (portrait, roughly 4:5)
   me: "Claerhout"  # your surname, printed in bold in author lists
   research_label: "Research"
   links:

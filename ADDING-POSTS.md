@@ -124,7 +124,7 @@ anything left empty is simply not shown.
 
 - `bio`: two or three sentences in your own words. Markdown links work.
 - `photo`: put a portrait (roughly 4:5, about 400×500 px) in `assets/img/`,
-  for example `assets/img/ward.jpg`, and set `photo: "/assets/img/ward.jpg"`.
+  for example `assets/img/portrait.jpg`, and set `photo: "/assets/img/portrait.jpg"`.
   Don't start the file name with `_`, Jekyll skips those.
   Search engines are asked not to put images from `assets/img/` in image
   search (`robots.txt` plus a `noimageindex` tag). That keeps it out of Google
