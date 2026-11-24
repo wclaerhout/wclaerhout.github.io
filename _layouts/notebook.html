@@ -11,9 +11,50 @@ layout: default
 
   <h1 class="post-title">{{ page.title }}</h1>
 
-  <a class="interactive-link" href="{{ page.interactive }}">Open the interactive Pluto notebook ↗</a>
+  <div class="nb-toolbar">
+    <a class="interactive-link" href="{{ page.interactive }}">Open the interactive Pluto notebook ↗</a>
+    <button type="button" class="code-toggle" aria-pressed="false">Hide code</button>
+  </div>
 
   <div class="prose notebook">
     {{ content }}
   </div>
 </article>
+
+<script>
+  // Hide or show all code cells; with code hidden, each cell gets a small "show code" link.
+  (function () {
+    var KEY = 'evo-hide-code';
+    var btn = document.querySelector('.code-toggle');
+    document.querySelectorAll('.nb-cell > .nb-code').forEach(function (code) {
+      var peek = document.createElement('button');
+      peek.type = 'button'; peek.className = 'code-peek'; peek.textContent = '▸ show code';
+      peek.addEventListener('click', function () {
+        var cell = code.parentElement, open = cell.classList.toggle('open');
+        peek.textContent = open ? '▾ hide code' : '▸ show code';
+      });
+      code.parentElement.insertBefore(peek, code);
+      // Raw return values (not printed text) sit behind a small "show output" link.
+      var raw = code.parentElement.querySelectorAll(':scope > .nb-out:not(.nb-stdout), :scope > .nb-table');
+      if (raw.length) {
+        var out = document.createElement('button');
+        out.type = 'button'; out.className = 'out-peek'; out.textContent = '▸ show output';
+        out.addEventListener('click', function () {
+          var o = code.parentElement.classList.toggle('out-open');
+          out.textContent = o ? '▾ hide output' : '▸ show output';
+        });
+        code.insertAdjacentElement('afterend', out);
+      }
+    });
+    function set(hidden) {
+      document.body.classList.toggle('code-hidden', hidden);
+      btn.textContent = hidden ? 'Show code' : 'Hide code';
+      btn.setAttribute('aria-pressed', hidden ? 'true' : 'false');
+      try { localStorage.setItem(KEY, hidden ? '1' : '0'); } catch (e) {}
+    }
+    var saved = '0';
+    try { saved = localStorage.getItem(KEY) || '0'; } catch (e) {}
+    set(saved === '1');
+    btn.addEventListener('click', function () { set(!document.body.classList.contains('code-hidden')); });
+  })();
+</script>

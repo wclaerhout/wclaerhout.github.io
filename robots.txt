@@ -1,0 +1,6 @@
+# Keep the portrait out of image search; the pages themselves stay indexable.
+User-agent: Googlebot-Image
+Disallow: /assets/img/
+
+User-agent: *
+Disallow: /assets/img/

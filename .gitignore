@@ -10,3 +10,5 @@ vendor/
 
 # Readable notebook pages are generated from the Pluto exports (_tools/pluto2post.py)
 notebooks/*/index.html
+notebooks/*/page-*.svg
+_data/publications.yml
