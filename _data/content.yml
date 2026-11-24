@@ -57,4 +57,4 @@ profile:
     - label: "GitHub"
       url: "https://github.com/wclaerhout"
     - label: "Email"
-      url: ""     # e.g. mailto:you@ugent.be
+      url: "mailto:ward.claerhout@ugent.be"     # e.g. mailto:you@ugent.be
